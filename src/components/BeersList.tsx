@@ -4,7 +4,7 @@ import { Beer } from '../types/Beer';
 import { fetchBeers } from '../utils/FetchBeers';
 
   
-export default function BeerList() {
+export default function BeersList() {
   const [beers, setBeers] = useState<Beer[]>([]);
 
   useEffect(() => {

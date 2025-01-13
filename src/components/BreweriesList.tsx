@@ -32,4 +32,3 @@ console.log("brasseries list", breweries);
     </div>
   );
 }
-
