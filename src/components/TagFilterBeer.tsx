@@ -12,7 +12,8 @@ interface TagFilterBeerProps {
 
 function TagFilterBeer({ beers }: TagFilterBeerProps) {
   const [selectedBreweries, setSelectedBreweries] = useState<string[]>([]); 
-  const [selectedAlcoholTags, setSelectedAlcoholTags] = useState<string[]>([]); 
+  const [selectedAlcohol, setSelectedAlcohol] = useState<string[]>([]); 
+ const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [filteredBeers, setFilteredBeers] = useState<Beer[]>([]); 
 
   const breweryTags = Array.from(new Set(beers.map((beer) => (beer.brewery_name ?? '').toString())));
@@ -24,9 +25,11 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
     { label: "Forte (+ de 7°)", value: "strong", range: [7, Infinity] }
   ], []);
 
+  const categoryTags = Array.from(new Set(beers.map((beer) => (beer.category_name ?? '').toString())));
+
   useEffect(() => {
     // pas de tag : pas de resultats affichés
-    if (selectedBreweries.length === 0 && selectedAlcoholTags.length === 0) {
+    if (selectedBreweries.length === 0 && selectedAlcohol.length === 0 && selectedCategories.length === 0) {
       console.log('Pas de tag sélectionné');
       setFilteredBeers([]);
       return;
@@ -41,10 +44,17 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
       );
     }
 
+    // Filtre catégorie
+    if (selectedCategories.length > 0) {
+      filtered = filtered.filter((beer) =>
+        selectedCategories.includes(beer.category_name.toString())
+      );
+    }
+
     // Filtre alcool
-    if (selectedAlcoholTags.length > 0) {
+    if (selectedAlcohol.length > 0) {
       filtered = filtered.filter((beer) => {
-        return selectedAlcoholTags.some((tag) => {
+        return selectedAlcohol.some((tag) => {
           const alcoholTag = alcoholTags.find((at) => at.value === tag);
           if (alcoholTag) {
             const [min, max] = alcoholTag.range;
@@ -56,7 +66,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
     }
 
     setFilteredBeers(filtered);
-  }, [selectedBreweries, selectedAlcoholTags, beers, alcoholTags]);
+  }, [selectedBreweries, selectedAlcohol, selectedCategories, beers, alcoholTags]);
 
   const handleBreweryTagClick = (brewery: string): void => {
     setSelectedBreweries((prevBreweries) =>
@@ -67,12 +77,27 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
   };
 
   const handleAlcoholTagClick = (alcoholTag: string): void => {
-    setSelectedAlcoholTags((prevAlcoholTags) =>
-      prevAlcoholTags.includes(alcoholTag)
-        ? prevAlcoholTags.filter((tag) => tag !== alcoholTag)
-        : [...prevAlcoholTags, alcoholTag]
+    setSelectedAlcohol((prevAlcohol) =>
+      prevAlcohol.includes(alcoholTag)
+        ? prevAlcohol.filter((tag) => tag !== alcoholTag)
+        : [...prevAlcohol, alcoholTag]
     );
   };
+
+  const handleCategoryTagClick = (category: string): void => {
+    setSelectedCategories((prevCategories) =>
+      prevCategories.includes(category)
+       ? prevCategories.filter((c) => c!== category)
+        : [...prevCategories, category]
+    );
+  };
+//   const handleResetClick = () => {
+//     setSelectedBreweries([]);
+//     setSelectedAlcohol([]);
+//     setSelectedCategories([]);
+//     setFilteredBeers(beers);
+//   };
+
 
   return (
     <div>
@@ -102,14 +127,33 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
             key={index}
             onClick={() => handleAlcoholTagClick(tag.value)}
             style={{
-              backgroundColor: selectedAlcoholTags.includes(tag.value)
+              backgroundColor: selectedAlcohol.includes(tag.value)
                 ? 'blue'
                 : 'white',
-              color: selectedAlcoholTags.includes(tag.value) ? 'white' : 'black',
+              color: selectedAlcohol.includes(tag.value) ? 'white' : 'black',
               cursor: 'pointer',
             }}
           >
             {tag.label}
+          </button>
+        ))}
+      </div>
+      
+      <p>Filtrer par categorie</p>
+      <div className="tag-container">
+        {categoryTags.map((tag, index) => (
+          <button
+            key={index}
+            onClick={() => handleCategoryTagClick(tag.toString())}
+            style={{
+              backgroundColor: selectedCategories.includes(tag)
+                ? 'blue'
+                : 'white',
+              color: selectedCategories.includes(tag) ? 'white' : 'black',
+              cursor: 'pointer',
+            }}
+          >
+            {tag}
           </button>
         ))}
       </div>
