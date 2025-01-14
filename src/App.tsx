@@ -1,8 +1,9 @@
 import './App.css';
-import BeersList from './components/BeersList';
-import BreweriesList from './components/BreweriesList';
-import BeerDetails from './components/BeerDetails';
-import BreweryDetails from './components/BreweryDetails';
+import BeersList from './pages/BeersList';
+import BreweriesList from './pages/BreweriesList';
+import BeerDetails from './pages/BeerDetails';
+import BreweryDetails from './pages/BreweryDetails';
+import Home from './pages/Home';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
         </header>
 
         <Routes>
-          <Route path="/" element={<h2>Welcome to Zitho</h2>} />
+          <Route path="/" element={<Home/>} />
           <Route path="/beers" element={<BeersList />} />
           <Route path="/beerDetails/:beer_id" element={<BeerDetails />} />
           <Route path="/breweries" element={<BreweriesList />} />

@@ -2,6 +2,8 @@
 import { useEffect, useState } from 'react';
 import { Beer } from '../types/Beer';
 import { fetchBeers } from '../utils/FetchBeers';
+import { Link } from 'react-router-dom';
+import SearchBeer from '../components/SearchBeer';
 
   
 export default function BeersList() {
@@ -14,6 +16,7 @@ export default function BeersList() {
   return (
     <div>
       <h1>Beer List</h1>
+      <SearchBeer beers={beers} />
      { beers.length === 0 ? (
        <p>Aucune bière trouvée.</p>
      ) : (
@@ -21,6 +24,7 @@ export default function BeersList() {
          {beers.map(beer => (
            <li key={beer.beer_id}>
              {beer.name} - {beer.description}
+              <Link to={`/beerDetails/${beer.beer_id}`}>page de la biere</Link>
            </li>
          ))}
        </ul>

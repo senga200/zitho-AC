@@ -1,18 +1,19 @@
 
   
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import BeersList from "./components/BeersList";
-import BreweriesList from "./components/BreweriesList";
-import BeerDetails from "./components/BeerDetails";
-import BreweryDetails from "./components/BreweryDetails";
+import BeersList from "./pages/BeersList";
+import BreweriesList from "./pages/BreweriesList";
+import BeerDetails from "./pages/BeerDetails";
+import BreweryDetails from "./pages/BreweryDetails";
+import Home from "./pages/Home";
 
 const router = createBrowserRouter([
   {
-    path: "/home",
-    element: <h2>Home</h2>,
+    path: "/",
+    element: <Home />,
   },
   {
-    path: "/beerList",
+    path: "/beers",
     element: <BeersList />,
   },
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/breweriesList",
+    path: "/breweries",
     element: <BreweriesList />,
   },
   {
