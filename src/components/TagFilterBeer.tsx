@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Beer } from '../types/Beer';
 import { Link } from 'react-router-dom';
 import { useMemo } from 'react';
+import './../styles/TagStyle.css';
 
 interface TagFilterBeerProps {
   beers: Beer[];
@@ -101,7 +102,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
 
   return (
     <div>
-      <p>Filtrer par brasserie</p>
+      <h3>Filtrer par brasserie</h3>
       <div className="tag-container">
         {breweryTags.map((brewery, index) => (
           <button
@@ -109,7 +110,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
             onClick={() => handleBreweryTagClick(brewery.toString())}
             style={{
               backgroundColor: selectedBreweries.includes(brewery)
-                ? 'blue'
+                ?  '#ffae00'
                 : 'white',
               color: selectedBreweries.includes(brewery) ? 'white' : 'black',
               cursor: 'pointer',
@@ -120,7 +121,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
         ))}
       </div>
 
-      <p>Filtrer par alcool</p>
+      <h3>Filtrer par alcool</h3>
       <div className="tag-container">
         {alcoholTags.map((tag, index) => (
           <button
@@ -128,7 +129,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
             onClick={() => handleAlcoholTagClick(tag.value)}
             style={{
               backgroundColor: selectedAlcohol.includes(tag.value)
-                ? 'blue'
+                ?  '#ffae00'
                 : 'white',
               color: selectedAlcohol.includes(tag.value) ? 'white' : 'black',
               cursor: 'pointer',
@@ -139,7 +140,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
         ))}
       </div>
       
-      <p>Filtrer par categorie</p>
+      <h3>Filtrer par categorie</h3>
       <div className="tag-container">
         {categoryTags.map((tag, index) => (
           <button
@@ -147,7 +148,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
             onClick={() => handleCategoryTagClick(tag.toString())}
             style={{
               backgroundColor: selectedCategories.includes(tag)
-                ? 'blue'
+                ? '#ffae00'
                 : 'white',
               color: selectedCategories.includes(tag) ? 'white' : 'black',
               cursor: 'pointer',
@@ -160,25 +161,31 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
 
       <p>Résultats :</p>
       <div className="beer-list">
-        {filteredBeers.length > 0 ? (
-          filteredBeers.map((beer) => (
-            <div key={beer.beer_id} className="beer-item">
-              <Link to={`/beerDetails/${beer.beer_id}`}>
-                <h4>{beer.name}</h4>
-                <p>{beer.description}</p>
-                <p>
-                  <strong>Brasserie :</strong> {beer.brewery_name}
-                </p>
-                <p>
-                  <strong>ABV :</strong> {beer.abv}°
-                </p>
-              </Link>
-            </div>
-          ))
-        ) : (
-          <p>Aucune bière ne correspond aux critères de recherche.</p>
-        )}
+  {selectedBreweries.length === 0 && selectedAlcohol.length === 0 && selectedCategories.length === 0 ? (
+    // Aucun tag sélectionné
+    <p>Sélectionnez un ou plusieurs tags pour voir les résultats.</p>
+  ) : filteredBeers.length > 0 ? (
+    // Tags sélectionnés avec résultats
+    filteredBeers.map((beer) => (
+      <div key={beer.beer_id} className="beer-item">
+        <Link to={`/beerDetails/${beer.beer_id}`}>
+          <h4>{beer.beer_name}</h4>
+          <p>{beer.description}</p>
+          <p>
+            <strong>Brasserie :</strong> {beer.brewery_name}
+          </p>
+          <p>
+            <strong>ABV :</strong> {beer.abv}°
+          </p>
+        </Link>
       </div>
+    ))
+  ) : (
+    // Tags sélectionnés mais aucun résultat
+    <p>Aucune bière ne correspond aux critères de recherche.</p>
+  )}
+</div>
+
     </div>
   );
 }

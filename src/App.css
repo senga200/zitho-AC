@@ -1,10 +1,20 @@
-/* #root {
+@import url('https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&display=swap');
+
+#root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
 }
 
+.header-title {
+  font-family: 'UnifrakturCook', cursive;
+  font-size: 4.5em;
+  margin-bottom: 1em;
+  color: #ffae00;
+}
+
+/*
 .logo {
   height: 6em;
   padding: 1.5em;

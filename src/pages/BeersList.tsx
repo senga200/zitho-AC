@@ -5,6 +5,7 @@ import { fetchBeers } from '../utils/FetchBeers';
 import { Link } from 'react-router-dom';
 import SearchBeer from '../components/SearchBeer';
 import TagFilterBeer from '../components/TagFilterBeer';
+import './../styles/BeersListStyle.css';
   
 export default function BeersList() {
   const [beers, setBeers] = useState<Beer[]>([]);
@@ -15,7 +16,7 @@ export default function BeersList() {
 
   return (
     <div>
-      <h1>Beer List</h1>
+      <h2 className='h2-list'>Liste des bières</h2>
       <SearchBeer beers={beers} />
       <TagFilterBeer beers={beers} beerTags={[]} />
      { beers.length === 0 ? (
@@ -23,10 +24,12 @@ export default function BeersList() {
      ) : (
        <ul>
          {beers.map(beer => (
-           <li key={beer.beer_id}>
-             {beer.name} - {beer.description}
-              <Link to={`/beerDetails/${beer.beer_id}`}>page de la biere</Link>
-           </li>
+          <li className="list-item" key={beer.beer_id}>
+          <Link to={`/beerDetails/${beer.beer_id}`}>
+            <h3>{beer.beer_name} </h3> <p>{beer.description}</p> _ 
+          </Link>
+        </li>
+        
          ))}
        </ul>
      )} 

@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { Beer } from "../types/Beer";
 import { Link } from "react-router-dom";
-
+import './../styles/SearchStyle.css';
 // Props initialiser la liste
 interface SearchBeerProps {
   beers: Beer[];
@@ -19,8 +20,9 @@ function SearchBeer({ beers }: SearchBeerProps) {
       return;
     }
 
+    //  si beer.beer_name est défini ?
     const filteredResults = beers.filter((beer) =>
-      beer.name.toLowerCase().includes(search.toLowerCase())
+      beer.beer_name && beer.beer_name.toLowerCase().includes(search.toLowerCase())
     );
     setSearchResults(filteredResults);
   }, [search, beers]);
@@ -44,8 +46,7 @@ function SearchBeer({ beers }: SearchBeerProps) {
           searchResults.map((beer) => (
             <div key={beer.beer_id} className="searchResultItem">
               <Link to={`/beerDetails/${beer.beer_id}`}>
-                <h3>{beer.name}</h3>
-                <p>{beer.description}</p>
+                <h3>{beer.beer_name}</h3>
               </Link>
             </div>
           ))

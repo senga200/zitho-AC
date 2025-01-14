@@ -1,0 +1,51 @@
+.h2-list {
+    font-size: 3em;
+    font-weight: bold;
+
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+li {
+    list-style-type: none;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.list-item {
+    margin-bottom: 1em;
+}
+
+.list-item::before {
+    content: "🍺";
+    margin-right: 0.5em;
+}
+
+.list-item a {
+    color: hsl(0, 0%, 100%);
+    text-decoration: none;
+}
+
+.list-item a:hover {
+    color: #ffae00;
+}
+
+@media (max-width: 600px) {
+    .h2-list {
+        font-size: 2em;
+    }
+}
+
+/* Dark mode */

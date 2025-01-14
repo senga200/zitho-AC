@@ -1,0 +1,30 @@
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+    justify-content: center;
+}
+
+.tag-container button {
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 25px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+/* button:hover {
+    color: #ffae00;
+} */
+
+.tag-container button:active {
+    transform: scale(0.95);
+}
+
+/* .tag-container button.selected {
+    color: #ffae00;
+} */
