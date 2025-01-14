@@ -4,7 +4,7 @@ import { Beer } from '../types/Beer';
 import { fetchBeers } from '../utils/FetchBeers';
 import { Link } from 'react-router-dom';
 import SearchBeer from '../components/SearchBeer';
-
+import TagFilterBeer from '../components/TagFilterBeer';
   
 export default function BeersList() {
   const [beers, setBeers] = useState<Beer[]>([]);
@@ -17,6 +17,7 @@ export default function BeersList() {
     <div>
       <h1>Beer List</h1>
       <SearchBeer beers={beers} />
+      <TagFilterBeer beers={beers} beerTags={[]} />
      { beers.length === 0 ? (
        <p>Aucune bière trouvée.</p>
      ) : (
