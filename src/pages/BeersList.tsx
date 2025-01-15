@@ -16,7 +16,7 @@ function BeersList() {
   }, []);
 
   return (
-    <div>
+    <div className='beers-list'>
       <h2 className='h2-list'>Nos bières</h2>
       <SearchBeer beers={beers} />
       <TagFilterBeer beers={beers} beerTags={[]} />

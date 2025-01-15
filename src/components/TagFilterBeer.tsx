@@ -187,7 +187,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
     <p>Aucune bière ne correspond aux critères de recherche.</p>
     
   )}
-        <div>
+        <div className='reset-button'>
         <button onClick={handleResetClick}>Réinitialiser les filtres</button>
         {/* <button onClick={() => console.log(filteredBeers)}>Console log</button> */}
       </div>

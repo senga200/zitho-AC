@@ -1,3 +1,7 @@
+.beers-list {
+    width: 550px;
+}
+
 .h2-list {
     font-size: 3em;
     font-weight: bold;
@@ -42,10 +46,23 @@ li {
     font-size: 1.2rem;
 }
 
+.reset-button {
+    color: hsl(0, 0%, 100%);
+    border: none;
+    padding: 0.5em 1em;
+    font-size: 1.2rem;
+    margin: 1em 0;
+    cursor: pointer;
+}
+
 
 
 @media (max-width: 600px) {
     .h2-list {
         font-size: 2em;
+    }
+
+    .beers-list {
+        width: 100%;
     }
 }
