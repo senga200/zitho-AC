@@ -8,5 +8,6 @@ export interface Beer {
     description: string;
     abv: number;
     category_name: string;
+    logo_url: string;
     setFilteredBeers: React.Dispatch<React.SetStateAction<Beer[]>>;
 }

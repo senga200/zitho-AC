@@ -3,5 +3,6 @@ export interface Brewery {
     name: string;
     country: string;
     created_at: string;
+    logo: string;
 
 }

@@ -18,13 +18,14 @@ function BeerDetails() {
 
 
     return (
-    <div>
-        <h2>Détails de la bière {beer_id}</h2>
-        <h3>{beerDetails?.beer_name}</h3>
-        <p>{beerDetails?.description}</p>
-        <p>La brasserie qui fabrique cet elixir : {beerDetails?.brewery_name}</p>
-        <p>Degrés d'alcool : {beerDetails?.abv}°</p>
-        <p>Catégorie : {beerDetails?.category_name}</p>
+    <div className='details-container'>
+        <h2>{beerDetails?.beer_name}</h2>
+        <h5 className='description'>{beerDetails?.description}</h5>
+        <p><strong>Brewery : </strong>  {beerDetails?.brewery_name}</p>
+        
+        <p><strong>ABV : </strong>{beerDetails?.abv}°</p>
+        <p><strong>Category : </strong> {beerDetails?.category_name}</p>
+        <img src={beerDetails?.logo_url} alt={beerDetails?.beer_name} /> 
 
     </div>
   )
