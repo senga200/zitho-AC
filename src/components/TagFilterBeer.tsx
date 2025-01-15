@@ -92,12 +92,12 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
         : [...prevCategories, category]
     );
   };
-//   const handleResetClick = () => {
-//     setSelectedBreweries([]);
-//     setSelectedAlcohol([]);
-//     setSelectedCategories([]);
-//     setFilteredBeers(beers);
-//   };
+  const handleResetClick = () => {
+    setSelectedBreweries([]);
+    setSelectedAlcohol([]);
+    setSelectedCategories([]);
+    setFilteredBeers(beers);
+  };
 
 
   return (
@@ -165,7 +165,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
       </Collapse>
       <div className="beer-list">
   {selectedBreweries.length === 0 && selectedAlcohol.length === 0 && selectedCategories.length === 0 ? (
-    // Aucun tag sélectionné : si aucune bière filtrée, ne rien afficher ici 
+    // Aucun tag sélectionné : si aucune bière filtrée, ne rien afficher ici ?
     <p style={{ display: 'none' }}>Sélectionnez des tags pour afficher des bières.</p>
   
   ) : filteredBeers.length > 0 ? (
@@ -185,8 +185,15 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
     ))
   ) : (
     <p>Aucune bière ne correspond aux critères de recherche.</p>
+    
   )}
+        <div>
+        <button onClick={handleResetClick}>Réinitialiser les filtres</button>
+        {/* <button onClick={() => console.log(filteredBeers)}>Console log</button> */}
       </div>
+
+      </div>
+  
 
     </div>
   );
