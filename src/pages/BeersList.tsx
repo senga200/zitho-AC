@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import SearchBeer from '../components/SearchBeer';
 import TagFilterBeer from '../components/TagFilterBeer';
 import Collapse from '../components/Collapse';
-import './../styles/BeersListStyle.css';
+import './../styles/ListStyle.css';
   
 function BeersList() {
   const [beers, setBeers] = useState<Beer[]>([]);
@@ -16,7 +16,7 @@ function BeersList() {
   }, []);
 
   return (
-    <div className='beers-list'>
+    <div className='list-container'>
       <h2 className='h2-list'>Nos bières</h2>
       <SearchBeer beers={beers} />
       <TagFilterBeer beers={beers} beerTags={[]} />
