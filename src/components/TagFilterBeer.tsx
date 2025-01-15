@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Beer } from '../types/Beer';
+import Collapse from './Collapse';
 import { Link } from 'react-router-dom';
 import { useMemo } from 'react';
 import './../styles/TagStyle.css';
@@ -29,14 +30,13 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
   const categoryTags = Array.from(new Set(beers.map((beer) => (beer.category_name ?? '').toString())));
 
   useEffect(() => {
+    let filtered = beers; 
     // pas de tag : pas de resultats affichés
     if (selectedBreweries.length === 0 && selectedAlcohol.length === 0 && selectedCategories.length === 0) {
-      console.log('Pas de tag sélectionné');
       setFilteredBeers([]);
       return;
     }
 
-    let filtered = beers;
 
     // Filtre brasserie
     if (selectedBreweries.length > 0) {
@@ -67,7 +67,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
     }
 
     setFilteredBeers(filtered);
-  }, [selectedBreweries, selectedAlcohol, selectedCategories, beers, alcoholTags]);
+  }, [selectedBreweries, selectedAlcohol, selectedCategories, beers, alcoholTags]); 
 
   const handleBreweryTagClick = (brewery: string): void => {
     setSelectedBreweries((prevBreweries) =>
@@ -102,8 +102,11 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
 
   return (
     <div>
-      <h3>Filtrer par brasserie</h3>
+      <Collapse title="Filtrer par brasserie">
       <div className="tag-container">
+        
+        
+       
         {breweryTags.map((brewery, index) => (
           <button
             key={index}
@@ -120,8 +123,8 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
           </button>
         ))}
       </div>
-
-      <h3>Filtrer par alcool</h3>
+       </Collapse>
+      <Collapse title="Filtrer par alcool">
       <div className="tag-container">
         {alcoholTags.map((tag, index) => (
           <button
@@ -139,8 +142,9 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
           </button>
         ))}
       </div>
-      
-      <h3>Filtrer par categorie</h3>
+      </Collapse>
+  
+      <Collapse title="Filtrer par catégorie">
       <div className="tag-container">
         {categoryTags.map((tag, index) => (
           <button
@@ -158,33 +162,31 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
           </button>
         ))}
       </div>
-
-      <p>Résultats :</p>
+      </Collapse>
       <div className="beer-list">
   {selectedBreweries.length === 0 && selectedAlcohol.length === 0 && selectedCategories.length === 0 ? (
-    // Aucun tag sélectionné
-    <p>Sélectionnez un ou plusieurs tags pour voir les résultats.</p>
+    // Aucun tag sélectionné : si aucune bière filtrée, ne rien afficher ici 
+    <p style={{ display: 'none' }}>Sélectionnez des tags pour afficher des bières.</p>
+  
   ) : filteredBeers.length > 0 ? (
-    // Tags sélectionnés avec résultats
     filteredBeers.map((beer) => (
       <div key={beer.beer_id} className="beer-item">
         <Link to={`/beerDetails/${beer.beer_id}`}>
-          <h4>{beer.beer_name}</h4>
-          <p>{beer.description}</p>
+          <h3>{beer.beer_name}</h3>
+          {/* <p>{beer.description}</p>
           <p>
             <strong>Brasserie :</strong> {beer.brewery_name}
           </p>
           <p>
             <strong>ABV :</strong> {beer.abv}°
-          </p>
+          </p> */}
         </Link>
       </div>
     ))
   ) : (
-    // Tags sélectionnés mais aucun résultat
     <p>Aucune bière ne correspond aux critères de recherche.</p>
   )}
-</div>
+      </div>
 
     </div>
   );

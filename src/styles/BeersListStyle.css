@@ -10,7 +10,6 @@ ul {
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    gap: 1em;
 }
 
 li {
@@ -24,9 +23,6 @@ li {
 
 }
 
-.list-item {
-    margin-bottom: 1em;
-}
 
 .list-item::before {
     content: "🍺";
@@ -42,10 +38,14 @@ li {
     color: #ffae00;
 }
 
+.list-item h3 {
+    font-size: 1.2rem;
+}
+
+
+
 @media (max-width: 600px) {
     .h2-list {
         font-size: 2em;
     }
 }
-
-/* Dark mode */

@@ -5,9 +5,10 @@ import { fetchBeers } from '../utils/FetchBeers';
 import { Link } from 'react-router-dom';
 import SearchBeer from '../components/SearchBeer';
 import TagFilterBeer from '../components/TagFilterBeer';
+import Collapse from '../components/Collapse';
 import './../styles/BeersListStyle.css';
   
-export default function BeersList() {
+function BeersList() {
   const [beers, setBeers] = useState<Beer[]>([]);
 
   useEffect(() => {
@@ -16,22 +17,24 @@ export default function BeersList() {
 
   return (
     <div>
-      <h2 className='h2-list'>Liste des bières</h2>
+      <h2 className='h2-list'>Nos bières</h2>
       <SearchBeer beers={beers} />
       <TagFilterBeer beers={beers} beerTags={[]} />
      { beers.length === 0 ? (
        <p>Aucune bière trouvée.</p>
      ) : (
+       <Collapse title="Toutes les bières">         
        <ul>
          {beers.map(beer => (
           <li className="list-item" key={beer.beer_id}>
           <Link to={`/beerDetails/${beer.beer_id}`}>
-            <h3>{beer.beer_name} </h3> <p>{beer.description}</p> _ 
+            <h3>{beer.beer_name} </h3> 
           </Link>
         </li>
         
          ))}
        </ul>
+       </Collapse>
      )} 
      
 
@@ -40,3 +43,4 @@ export default function BeersList() {
   );
 }
 
+export default BeersList;

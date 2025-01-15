@@ -17,12 +17,29 @@
     outline: none;
 }
 
-/* button:hover {
-    color: #ffae00;
-} */
 
 .tag-container button:active {
     transform: scale(0.95);
+}
+
+.beer-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    margin: 0;
+    padding: 0;
+}
+
+.beer-item::before {
+    content: "🍺";
+    margin-right: 0.5em;
+}
+
+.beer-item h3 {
+
+    font-size: 1.2rem;
+
 }
 
 /* .tag-container button.selected {
