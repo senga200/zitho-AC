@@ -102,7 +102,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
 
   return (
     <div>
-      <Collapse title="Filtrer par brasserie">
+      <Collapse title="Filter by brewery">
       <div className="tag-container">
         
         
@@ -124,7 +124,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
         ))}
       </div>
        </Collapse>
-      <Collapse title="Filtrer par alcool">
+      <Collapse title="Filter by ABV">
       <div className="tag-container">
         {alcoholTags.map((tag, index) => (
           <button
@@ -144,7 +144,7 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
       </div>
       </Collapse>
   
-      <Collapse title="Filtrer par catégorie">
+      <Collapse title="Filter by category">
       <div className="tag-container">
         {categoryTags.map((tag, index) => (
           <button
@@ -184,11 +184,11 @@ function TagFilterBeer({ beers }: TagFilterBeerProps) {
       </div>
     ))
   ) : (
-    <p>Aucune bière ne correspond aux critères de recherche.</p>
+    <p>No beer match your request.</p>
     
   )}
         <div className='reset-button'>
-        <button onClick={handleResetClick}>Réinitialiser les filtres</button>
+        <button onClick={handleResetClick}>Reset filters</button>
         {/* <button onClick={() => console.log(filteredBeers)}>Console log</button> */}
       </div>
 

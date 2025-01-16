@@ -17,13 +17,13 @@ function BeersList() {
 
   return (
     <div className='list-container'>
-      <h2 className='h2-list'>Nos bières</h2>
+      <h2 className='h2-list'>Our Beers</h2>
       <SearchBeer beers={beers} />
       <TagFilterBeer beers={beers} beerTags={[]} />
      { beers.length === 0 ? (
-       <p>Aucune bière trouvée.</p>
+       <p>No beer found.</p>
      ) : (
-       <Collapse title="Toutes les bières">         
+       <Collapse title="All beers">         
        <ul>
          {beers.map(beer => (
           <li className="list-item" key={beer.beer_id}>

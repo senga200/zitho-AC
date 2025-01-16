@@ -37,7 +37,7 @@ function SearchBrewery({ breweries }: SearchBreweryProps) {
         type="text"
         value={search}
         onChange={handleSearchChange}
-        placeholder="Rechercher une brasserie..."
+        placeholder="Search a brewery..."
         className="searchInput"
       />
       <div className="searchResults">
@@ -51,7 +51,7 @@ function SearchBrewery({ breweries }: SearchBreweryProps) {
             </div>
           ))
         ) : search !== "" && search.length >= 3 ? (
-          <p>Aucun résultat trouvé.</p>
+          <p>No result found.</p>
         ) : null}
       </div>
     </div>

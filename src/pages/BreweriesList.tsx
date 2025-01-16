@@ -18,13 +18,13 @@ console.log("Nos brasseries", breweries);
 
   return (
     <div className='list-container'>
-      <h2 className='h2-list'>Nos brasseries</h2>
+      <h2 className='h2-list'>Our Breweries</h2>
       <SearchBrewery breweries={breweries} />
       <TagFilterBrewery breweries={breweries} breweryTags={[]} />
      { breweries.length === 0 ? (
-       <p>Aucune brasserie trouvée.</p>
+       <p>No brewery found.</p>
      ) : (
-      <Collapse title="Toutes les brasseries">
+      <Collapse title="All Breweries">
       
        <ul>
          {breweries.map(brewery => (

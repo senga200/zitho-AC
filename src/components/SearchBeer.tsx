@@ -38,7 +38,7 @@ function SearchBeer({ beers }: SearchBeerProps) {
         type="text"
         value={search}
         onChange={handleSearchChange}
-        placeholder="Rechercher une bière..."
+        placeholder="Search a beer..."
         className="searchInput"
       />
       <div className="searchResults">
@@ -51,7 +51,7 @@ function SearchBeer({ beers }: SearchBeerProps) {
             </div>
           ))
         ) : search !== "" && search.length >= 3 ? (
-          <p>Aucun résultat trouvé.</p>
+          <p>No result found.</p>
         ) : null}
       </div>
     </div>

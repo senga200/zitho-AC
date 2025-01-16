@@ -13,7 +13,7 @@ function App() {
       <NavBar />
       <div className="App">
         <header className="App-header">
-          <h1 className='header-title'>les Zythologues</h1>
+          <h1 className='header-title'>Zythologists</h1>
         </header>
 
         <Routes>

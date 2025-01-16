@@ -5,10 +5,10 @@ function Home() {
   return (
     <div className='home-container'>
 
-        <h2 className='home-title'>La bible des amateurs de bières</h2>
-        <Link to="/beers" className='link-style'>Voir les bières</Link>
+        <h2 className='home-title'>The Beer Lover's Guide</h2>
+        <Link to="/beers" className='link-style'>See all beers</Link>
         <br />
-        <Link to="/breweries" className='link-style'>Voir les brasseries</Link>
+        <Link to="/breweries" className='link-style'>See all breweries</Link>
         
       
     </div>
