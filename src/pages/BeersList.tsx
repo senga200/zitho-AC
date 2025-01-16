@@ -36,9 +36,7 @@ function BeersList() {
        </ul>
        </Collapse>
      )} 
-     
-
-
+    
     </div>
   );
 }

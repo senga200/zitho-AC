@@ -4,14 +4,16 @@ import BreweriesList from './pages/BreweriesList';
 import BeerDetails from './pages/BeerDetails';
 import BreweryDetails from './pages/BreweryDetails';
 import Home from './pages/Home';
+import NavBar from './components/NavBar';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <Router>
+      <NavBar />
       <div className="App">
         <header className="App-header">
-          <h1 className='header-title'>Zithologues</h1>
+          <h1 className='header-title'>les Zythologues</h1>
         </header>
 
         <Routes>
