@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState} from 'react';
 import { Beer } from '../types/Beer';
 import { fetchBeers } from '../utils/FetchBeers';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,9 @@ import Collapse from '../components/Collapse';
 import './../styles/ListStyle.css';
   
 function BeersList() {
+
+ 
+
   const [beers, setBeers] = useState<Beer[]>([]);
 
   useEffect(() => {
