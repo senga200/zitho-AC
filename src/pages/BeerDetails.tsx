@@ -17,8 +17,9 @@ function BeerDetails() {
     console.log("Context filter", filterCtx);
 
 
+
     const { beer_id } = useParams<{ beer_id: string }>()
-    console.log('ID de la brasserie récupérée dans l\'URL: ' + beer_id);
+    console.log('ID de la brasserie récupérée dans lURL: ' + beer_id);
 
     const [beers, setBeers] = useState<Beer[]>([])
     useEffect(() => {

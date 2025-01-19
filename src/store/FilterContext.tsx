@@ -1,3 +1,5 @@
+
+
 import { createContext, useState, ReactNode } from "react";
 
 interface Filters {
@@ -9,8 +11,7 @@ interface Filters {
 
 interface FilterContextType {
   filters: Filters;
-  updateFilters: (filterName: string, value: string ) => void;
-
+  updateFilters: (filterName: string, value: string) => void;
 }
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
@@ -20,7 +21,7 @@ interface FilterContextProviderProps {
 }
 
 const FilterContextProvider = (props: FilterContextProviderProps) => {
-  // stockage des filtres :
+  // Initialisation de l etat des filtres
   const [filters, setFilters] = useState<Filters>({
     beer_name: "",
     brewery_name: "",
@@ -28,12 +29,12 @@ const FilterContextProvider = (props: FilterContextProviderProps) => {
     category_name: "",
   });
 
-  // mise à jour des filtres :
+  // MAJ filtres
   const updateFilters = (filterName: string, value: string) => {
-    setFilters({
-      ...filters,
+    setFilters((prevFilters) => ({
+      ...prevFilters,
       [filterName]: value,
-    });
+    }));
   };
 
   const contextValue = {

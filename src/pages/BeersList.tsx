@@ -31,6 +31,7 @@ function BeersList() {
          {beers.map(beer => (
           <li className="list-item" key={beer.beer_id}>
           <Link to={`/beerDetails/${beer.beer_id}`}>
+          
             <h3>{beer.beer_name} </h3> 
           </Link>
         </li>

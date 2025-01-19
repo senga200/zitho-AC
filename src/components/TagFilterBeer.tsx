@@ -1,6 +1,5 @@
 
-// export default TagFilterBeer;
-import { useState, useEffect, useContext, useMemo, useRef } from 'react';
+import { useContext, useMemo} from 'react';
 import { FilterContext } from "../store/FilterContext";
 import { Beer } from '../types/Beer';
 import Collapse from './Collapse';
@@ -9,128 +8,115 @@ import './../styles/TagStyle.css';
 
 interface TagFilterBeerProps {
   beers: Beer[];
-  beerTags: string[];
+  //breweryFilter: string;
 }
 
 function TagFilterBeer({ beers }: TagFilterBeerProps) {
-  const [selectedBreweries, setSelectedBreweries] = useState<string[]>([]); 
-  const [selectedAlcohol, setSelectedAlcohol] = useState<string[]>([]); 
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); 
-  const [filteredBeers, setFilteredBeers] = useState<Beer[]>([]); 
 
-  const breweryTags = Array.from(new Set(beers.map((beer) => beer.brewery_name ?? '')));
-
-  const alcoholTags = useMemo(() => [
-    { label: "Sans alcool", value: "non_alcoholic", range: [0, 0] },
-    { label: "Légère (0-4°)", value: "light", range: [0, 4] },
-    { label: "Moyenne (4-7°)", value: "medium", range: [4, 7] },
-    { label: "Forte (+ de 7°)", value: "strong", range: [7, Infinity] }
-  ], []);
-
-  
-  // const categoryTags = Array.from(new Set(beers.map((beer) => (beer.category_name ?? '').toString())));
-
-  const categoryTags = Array.from(new Set(beers.map((beer) => beer.category_name ?? '')));
-
+  //MISE EN PLACE DU CONTEXT
   const filterCtx = useContext(FilterContext);
-  const updateFilters = filterCtx?.updateFilters;
+  if (!filterCtx) {
+    throw new Error("FilterContext must be used within a FilterContextProvider");
+  }
+
+  const { filters, updateFilters } = filterCtx;
+
+  // LES TAGS - useMemo pour alcoholTags car est statique, ne change pas et du coup n'a pas besoin d'être recalculé à chaque render
+  const breweryTags = Array.from(new Set(beers.map((beer) => beer.brewery_name ?? '')));
+  const categoryTags = Array.from(new Set(beers.map((beer) => beer.category_name ?? '')));
+  const alcoholTags = useMemo(
+    () => [
+      { label: "Sans alcool", value: "non_alcoholic", range: [0, 0] },
+      { label: "Légère (0-4°)", value: "light", range: [0, 4] },
+      { label: "Moyenne (4-7°)", value: "medium", range: [4, 7] },
+      { label: "Forte (+ de 7°)", value: "strong", range: [7, Infinity] },
+    ],
+    []
+  );
+
+  // // Filtrer les bières en fonction des filtres du contexte. Utilisation de useMemo pour éviter de recalculer à chaque render FilteredBeers. le tableau est recaclulé uniquement si les dépendances changent -beers-filter-alcoholTags
+  const filteredBeers = useMemo(() => {
+    // Vérifie si aucun filtre n'est sélectionné
+    const noFiltersActive =
+      !filters.brewery_name &&
+      !filters.category_name &&
+      !filters.abv;
   
-  // conserver les filtres precendets
-  const prevFiltersRef = useRef({
-    breweries: '',
-    alcohol: '',
-    categories: '',
-  });
-  
-  //MAJ beers
-  useEffect(() => {
-    let filtered = beers;
-    
-    if (selectedBreweries.length === 0 && selectedAlcohol.length === 0 && selectedCategories.length === 0) {
-      setFilteredBeers([]);
-      return;
+    if (noFiltersActive) {
+      // Retourne un tableau vide si aucun filtre n'est actif
+      return [];
     }
-    
+  
+    let filtered = beers;
+  
     // Filtrage par brasserie
-    if (selectedBreweries.length > 0) {
+    if (filters.brewery_name) {
+      const selectedBreweries = filters.brewery_name.split(",");
       filtered = filtered.filter((beer) =>
         selectedBreweries.includes(beer.brewery_name ?? '')
-    );
+      );
     }
-    
-    // Filtrage par catégorie
-    if (selectedCategories.length > 0) {
+    // Filtrage par catégori
+    if (filters.category_name) {
+      const selectedCategories = filters.category_name.split(",");
       filtered = filtered.filter((beer) =>
         selectedCategories.includes(beer.category_name ?? '')
-    );
-  }
-  
-  // Filtrage par alcool
-  if (selectedAlcohol.length > 0) {
-    filtered = filtered.filter((beer) => 
-      selectedAlcohol.some((tag) => {
-        const alcoholTag = alcoholTags.find((at) => at.value === tag);
-        if (alcoholTag) {
-          const [min, max] = alcoholTag.range;
-          return beer.abv >= min && beer.abv <= max;
-        }
-        return false;
-      })
-    );
-  }
-  
-  setFilteredBeers(filtered);
-}, [selectedBreweries, selectedAlcohol, selectedCategories, beers, alcoholTags]);
-
-// MAJ filtres dans context
-useEffect(() => {
-  const breweriesStr = selectedBreweries.join(',');
-  const alcoholStr = selectedAlcohol.join(',');
-  const categoriesStr = selectedCategories.join(',');
-  if (
-    prevFiltersRef.current.breweries !== breweriesStr ||
-    prevFiltersRef.current.alcohol !== alcoholStr ||
-    prevFiltersRef.current.categories !== categoriesStr
-  ) {
-    if (updateFilters) {
-      updateFilters('brewery_name', breweriesStr);
-      updateFilters('abv', alcoholStr);
-      updateFilters('category_name', categoriesStr);
+      );
     }
-    prevFiltersRef.current = { breweries: breweriesStr, alcohol: alcoholStr, categories: categoriesStr };
-  }
-}, [selectedBreweries, selectedAlcohol, selectedCategories, updateFilters]);
-console.log("filtres :", selectedBreweries, selectedAlcohol, selectedCategories);
   
+    // Filtrage par alcool
+    if (filters.abv) {
+      const selectedAlcohol = filters.abv.split(",");
+      filtered = filtered.filter((beer) =>
+        selectedAlcohol.some((tag) => {
+          const alcoholTag = alcoholTags.find((at) => at.value === tag);
+          if (alcoholTag) {
+            const [min, max] = alcoholTag.range;
+            return beer.abv >= min && beer.abv <= max;
+          }
+          return false;
+        })
+      );
+    }
+  
+    return filtered;
+  }, [beers, filters, alcoholTags]);
+  
+
   const handleBreweryTagClick = (brewery: string): void => {
-    setSelectedBreweries((prevBreweries) =>
-      prevBreweries.includes(brewery)
-        ? prevBreweries.filter((b) => b !== brewery)
-        : [...prevBreweries, brewery]
-    );
+    const selectedBreweries = filters.brewery_name
+     ? filters.brewery_name.split(",")
+      : [];
+    const updatedBreweries = selectedBreweries.includes(brewery)
+      ? selectedBreweries.filter((b) => b !== brewery)
+      : [...selectedBreweries, brewery];
+    updateFilters("brewery_name", updatedBreweries.join(","));
   };
 
   const handleAlcoholTagClick = (alcoholTag: string): void => {
-    setSelectedAlcohol((prevAlcohol) =>
-      prevAlcohol.includes(alcoholTag)
-        ? prevAlcohol.filter((tag) => tag !== alcoholTag)
-        : [...prevAlcohol, alcoholTag]
-    );
+    const selectedAlcohol = filters.abv 
+    ? filters.abv.split(",") 
+    : [];
+    const updatedAlcohol = selectedAlcohol.includes(alcoholTag)
+      ? selectedAlcohol.filter((tag) => tag !== alcoholTag)
+      : [...selectedAlcohol, alcoholTag];
+    updateFilters("abv", updatedAlcohol.join(","));
   };
 
   const handleCategoryTagClick = (category: string): void => {
-    setSelectedCategories((prevCategories) =>
-      prevCategories.includes(category)
-        ? prevCategories.filter((c) => c !== category)
-        : [...prevCategories, category]
-    );
+    const selectedCategories = filters.category_name
+      ? filters.category_name.split(",")
+      : [];
+    const updatedCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter((c) => c !== category)
+      : [...selectedCategories, category];
+    updateFilters("category_name", updatedCategories.join(","));
   };
 
   const handleResetClick = () => {
-    setSelectedBreweries([]);
-    setSelectedAlcohol([]);
-    setSelectedCategories([]);
-    setFilteredBeers(beers);
+    updateFilters("brewery_name", "");
+    updateFilters("abv", "");
+    updateFilters("category_name", "");
   };
 
   return (
@@ -142,9 +128,10 @@ console.log("filtres :", selectedBreweries, selectedAlcohol, selectedCategories)
               key={index}
               onClick={() => handleBreweryTagClick(brewery)}
               style={{
-                backgroundColor: selectedBreweries.includes(brewery) ? '#ffae00' : 'white',
-                color: selectedBreweries.includes(brewery) ? 'white' : 'black',
-                cursor: 'pointer',
+                backgroundColor: filters.brewery_name?.includes(brewery)
+                  ? '#ffae00'
+                  : 'white',
+                color: filters.brewery_name?.includes(brewery) ? 'white' : 'black',
               }}
             >
               {brewery}
@@ -160,9 +147,10 @@ console.log("filtres :", selectedBreweries, selectedAlcohol, selectedCategories)
               key={index}
               onClick={() => handleAlcoholTagClick(tag.value)}
               style={{
-                backgroundColor: selectedAlcohol.includes(tag.value) ? '#ffae00' : 'white',
-                color: selectedAlcohol.includes(tag.value) ? 'white' : 'black',
-                cursor: 'pointer',
+                backgroundColor: filters.abv?.includes(tag.value)
+                  ? '#ffae00'
+                  : 'white',
+                color: filters.abv?.includes(tag.value) ? 'white' : 'black',
               }}
             >
               {tag.label}
@@ -173,26 +161,29 @@ console.log("filtres :", selectedBreweries, selectedAlcohol, selectedCategories)
 
       <Collapse title="Filter by category">
         <div className="tag-container">
-          {categoryTags.map((tag, index) => (
+          {categoryTags.map((category, index) => (
             <button
               key={index}
-              onClick={() => handleCategoryTagClick(tag)}
+              onClick={() => handleCategoryTagClick(category)}
               style={{
-                backgroundColor: selectedCategories.includes(tag) ? '#ffae00' : 'white',
-                color: selectedCategories.includes(tag) ? 'white' : 'black',
-                cursor: 'pointer',
+                backgroundColor: filters.category_name?.includes(category)
+                  ? '#ffae00'
+                  : 'white',
+                color: filters.category_name?.includes(category)
+                  ? 'white'
+                  : 'black',
               }}
             >
-              {tag}
+              {category}
             </button>
           ))}
         </div>
       </Collapse>
 
       <div className="beer-list">
-        {selectedBreweries.length === 0 && selectedAlcohol.length === 0 && selectedCategories.length === 0 ? (
-          <p style={{ display: 'none' }}>Sélectionnez des tags pour afficher des bières.</p>
-        ) : filteredBeers.length > 0 ? (
+        {filteredBeers.length === 0 ? (
+          <p></p>
+        ) : (
           filteredBeers.map((beer) => (
             <div key={beer.beer_id} className="beer-item">
               <Link to={`/beerDetails/${beer.beer_id}`}>
@@ -200,10 +191,7 @@ console.log("filtres :", selectedBreweries, selectedAlcohol, selectedCategories)
               </Link>
             </div>
           ))
-        ) : (
-          <p>No beer match your request.</p>
-        )}
-
+        )}  
         <div className="reset-button">
           <button onClick={handleResetClick}>Reset filters</button>
         </div>
