@@ -19,10 +19,8 @@ function BreweryDetails() {
     const breweryDetails = breweries.find(brewery => brewery.brewery_id === Number(brewery_id));
     console.log("Détails de la bière", breweryDetails);
 
-    const dateStr = breweryDetails?.created_at;
-const year = dateStr ? new Date(dateStr).getFullYear() : '';
-
-
+   //const dateStr = breweryDetails?.created_at;
+   //const year = dateStr ? new Date(dateStr).getFullYear() : '';
 
 
     return (
@@ -30,7 +28,8 @@ const year = dateStr ? new Date(dateStr).getFullYear() : '';
 
       <h2>{breweryDetails?.name}</h2>
       <p><strong>Contry : </strong>{breweryDetails?.country}</p>
-      <p><strong>Since : </strong>{year}</p>
+      <p><strong>City : </strong>{breweryDetails?.created_at}</p>
+      {/* <p><strong>Since : </strong>{year}</p> */}
       <img src={breweryDetails?.logo} alt={breweryDetails?.name} /> 
 
         

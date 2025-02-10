@@ -4,6 +4,7 @@ import BreweriesList from './pages/BreweriesList';
 import BeerDetails from './pages/BeerDetails';
 import BreweryDetails from './pages/BreweryDetails';
 import Home from './pages/Home';
+import Admin from './pages/Admin';
 import NavBar from './components/NavBar';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
@@ -22,6 +23,7 @@ function App() {
           <Route path="/beerDetails/:beer_id" element={<BeerDetails />} />
           <Route path="/breweries" element={<BreweriesList />} />
           <Route path="/breweryDetails/:brewery_id" element={<BreweryDetails />} />
+          <Route path="/admin" element={<Admin />} />
 
           <Route path="*" element={<h2>Page not found</h2>} />
         </Routes>
