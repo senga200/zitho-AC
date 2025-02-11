@@ -1,4 +1,7 @@
 export interface Beer {
+    imageUrl: string 
+    category: string 
+    name: string
     brewery: string; 
     brewery_id: number;
     brewery_name: string;
