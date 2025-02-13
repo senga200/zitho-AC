@@ -9,6 +9,8 @@ import { Brewery } from "../types/Brewery";
 
 function Admin() {
 
+  ///////gestion connexion
+
   const ADMIN_EMAIL = "test";
   const ADMIN_PASSWORD = "test";
 
@@ -32,13 +34,15 @@ function Admin() {
   // localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
   // console.log("isAuthenticated", isAuthenticated);
 
-
-
+//gestion des brasseries
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [breweryIdToUpdate, setBreweryIdToUpdate] = useState<number | "">("");
+  const [breweryToEdit, setBreweryToEdit] = useState<Brewery | null>(null);
+  const [updatedBreweryData, setUpdatedBreweryData] = useState<Brewery | null>(null);
+
 
   const [breweryIdToSearch, setBreweryIdToSearch] = useState<number | "">("");
-  const [displayBrewery, setDisplayBrewery] = useState<{ id?: number; name?: string } | null>(null);
+  const [displayBrewery, setDisplayBrewery] = useState<{ id?: number; name?: string; country?: string } | null>(null);
   const [message, setMessage] = useState<string>("");
 
 
@@ -78,18 +82,54 @@ function Admin() {
     setMessage("Brasserie ajoutée avec succès.");
     fetchAllBreweries (); // rfesh la liste après ajout
   };
-  
-  const handleUpdateBrewery = async (id: number) => {
-    const updatedBrewery = { name: "Brasserie Modifiée", country: "Belgique" };
-    await updateBrewery(id, updatedBrewery);
-  };
 
   const handleDeleteBrewery = async (id: number) => {
-    await deleteBrewery(id);
-    setMessage("Brasserie supprimée !");
-    setDisplayBrewery(null);
+    const confirmDelete = window.confirm(`Êtes-vous sûr de vouloir supprimer la brasserie ID ${id} ?`);
+    
+    if (confirmDelete) {
+      await deleteBrewery(id);
+      setMessage("Brasserie supprimée !");
+      setDisplayBrewery(null);
+      fetchAllBreweries();
+    } else {
+      setMessage("Suppression annulée.");
+    }
+  };
+
+  const handleSearchBreweryToUpdate = async () => {
+    if (!breweryIdToUpdate) return;
+  
+    const response = await fetchBreweryById(Number(breweryIdToUpdate));
+    
+    if (response?.brewery) {
+      setBreweryToEdit(response.brewery);
+      setUpdatedBreweryData(response.brewery); // Pré-remplit le formulaire
+      setMessage("");
+    } else {
+      setBreweryToEdit(null);
+      setMessage("Aucune brasserie trouvée avec cet ID.");
+    }
+  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!updatedBreweryData) return;
+    
+    setUpdatedBreweryData({
+      ...updatedBreweryData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleUpdateBrewery = async () => {
+    if (!breweryToEdit || !updatedBreweryData) return;
+  
+    await updateBrewery(breweryToEdit.brewery_id, updatedBreweryData);
+    setMessage("Brasserie mise à jour avec succès !");
+    setBreweryToEdit(null);
     fetchAllBreweries();
   };
+  
+  
+  
+  
 
   if (!isAuthenticated) {
     return (
@@ -135,8 +175,10 @@ function Admin() {
       <button onClick={handleSearchBreweryById}>
       Rechercher
       </button>
-      <button onClick={() => handleDeleteBrewery(Number(breweryIdToSearch))}>Supprimer</button>
       {displayBrewery && <p>Brasserie trouvée : {displayBrewery.name}</p>}
+      <button onClick={() => handleDeleteBrewery(Number(breweryIdToSearch))}>
+      🗑️ Supprimer
+      </button>
       {message && <p style={{ color: "green" }}>{message}</p>}
       </Collapse>
       <Collapse title="Ajouter une brasserie">
@@ -156,8 +198,45 @@ function Admin() {
       value={breweryIdToUpdate}
       onChange={(e) => setBreweryIdToUpdate(Number(e.target.value))}
       />
-      <button onClick={() => handleUpdateBrewery(Number(breweryIdToUpdate))}>Modifier</button>
-      </Collapse>
+      <button onClick={handleSearchBreweryToUpdate}>Rechercher</button>
+
+  {breweryToEdit && updatedBreweryData && (
+    <div>
+      <h3>Modifier : {breweryToEdit.name}</h3>
+      <input 
+        type="text" 
+        name="name" 
+        value={updatedBreweryData.name || ""} 
+        onChange={handleInputChange} 
+        placeholder="Nom de la brasserie"
+      />
+      <input 
+        type="text" 
+        name="country" 
+        value={updatedBreweryData.country || ""}  
+        onChange={handleInputChange} 
+        placeholder="Pays"
+      />
+      <input 
+        type="text" 
+        name="created_at" 
+        value={updatedBreweryData.created_at || ""} 
+        onChange={handleInputChange} 
+        placeholder="Date de création"
+      />
+      <input 
+        type="text" 
+        name="logo" 
+        value={updatedBreweryData.logo || ""} 
+        onChange={handleInputChange} 
+        placeholder="Logo"
+      />
+      <button onClick={handleUpdateBrewery}>Enregistrer</button>
+    </div>
+  )}
+
+  {message && <p style={{ color: "green" }}>{message}</p>}
+</Collapse>
 
     </div>
   );
