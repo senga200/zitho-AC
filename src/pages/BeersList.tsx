@@ -22,7 +22,7 @@ function BeersList() {
     <div className='list-container'>
       <h2 className='h2-list'>Our Beers</h2>
       <SearchBeer beers={beers} />
-      <TagFilterBeer beers={beers} beerTags={[]} />
+      <TagFilterBeer beers={beers} />
      { beers.length === 0 ? (
        <p>No beer found.</p>
      ) : (

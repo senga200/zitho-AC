@@ -15,6 +15,15 @@ function Admin() {
   const [breweryCreatedAt, setBreweryCreatedAt] = useState("");
   const [breweryLogo, setBreweryLogo] = useState("");
 
+  const [beerName, setBeerName] = useState("");
+  const [beerBreweryId, setBeerBreweryId] = useState("");
+  const [beerABV, setBeerABV] = useState("");
+  const [beerCategoryId, setBeerCategoryId] = useState("");
+  const [beerDescription, setBeerDescription] = useState("");
+  const [beerUrl, setBeerUrl] = useState("");
+
+
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -26,8 +35,8 @@ function Admin() {
       setIsAuthenticated(false);
     }
   };
-  localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
-  console.log("isAuthenticated", isAuthenticated);
+  // localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
+  // console.log("isAuthenticated", isAuthenticated);
 
   const handleAddBrewery = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,7 +56,7 @@ function Admin() {
         },
         body: JSON.stringify(newBrewery),
       });
-  
+      
       if (!response.ok) {
         throw new Error(`Erreur HTTP! Statut: ${response.status}`);
       }
@@ -79,9 +88,71 @@ function Admin() {
       console.error("Erreur lors de la suppression de la brasserie :", error);
     }
   }
-  
-  
 
+  const handleUpdateBrewery = async (id: number) => {
+    const updatedBrewery = {
+      name: breweryName,
+      country: breweryCountry,
+      created_at: breweryCreatedAt,
+      logo: breweryLogo,
+    };
+    try {
+      const response = await fetch(`http://localhost:5000/api/v1/breweries/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ updatedBrewery }),
+      });
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Brasserie trouvée :", data);
+      setBreweryName("");
+    setBreweryCountry("");
+    setBreweryCreatedAt("");
+    setBreweryLogo("");
+
+    } catch (error) {
+      console.error("Erreur lors de la MAJ de la brasserie :", error);
+    }
+  }
+
+  const handleAddBeer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const newBeer = {
+      name: beerName,
+      brewery_id: Number(beerBreweryId),
+      category_id: Number(beerCategoryId),
+      abv: Number(beerABV),
+      description: beerDescription,
+      logo_url: beerUrl,
+    };
+    
+    try {
+      const response = await fetch("http://localhost:5000/api/v1/beers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newBeer),
+      });
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Bière ajoutée :", data);
+      setBeerName("");
+      setBeerBreweryId("");
+      setBeerABV("");
+      setBeerDescription("");
+      setBeerUrl("");
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la bière :", error);
+    }
+  }
+ 
 
   if (!isAuthenticated) {
     return (
@@ -109,44 +180,45 @@ function Admin() {
     return (
       <div>
         <p>Yo, t'es sur la page admin</p>
-
         <div>
           <h3>Bières</h3>
           <Collapse title="Ajouter une bière">
+            <form onSubmit={handleAddBeer}>
             <input
               type="text"
               name="name"
               placeholder="Nom de la bière"
-              // value={}
-              // onChange={handleInputChange}
+              value={beerName}
+              onChange={(e) => setBeerName(e.target.value)}
             />
             <input
-              type="text"
-              name="brewery"
-              placeholder="Nom de la brasserie"
-              // value={}
-              // onChange={handleInputChange}
-            />
+              type="number"
+              name="brewery_id"
+              placeholder="ID de la brasserie"
+              value={beerBreweryId}
+              onChange={(e) => setBeerBreweryId(e.target.value)}
+/>
+            
             <input
               type="text"
               name="description"
               placeholder="Description de la bière"
-              // value={}
-              // onChange={handleInputChange}
+              value={beerDescription}
+              onChange={(e) => setBeerDescription(e.target.value)}
             />
             <input
-              type="text"
-              name="category"
-              placeholder="Catégorie de la bière"
-              // value={}
-              // onChange={handleInputChange}
-            />
+              type="number"
+              name="category_id"
+              placeholder="ID de la catégorie"
+              value={beerCategoryId}
+              onChange={(e) => setBeerCategoryId(e.target.value)}
+/>
             <input
               type="number"
               name="abv"
               placeholder="ABV de la bière"
-              // value={}
-              // onChange={handleInputChange}
+              value={beerABV}
+              onChange={(e) => setBeerABV(e.target.value)}
             />
             <input
               type="text"
@@ -155,7 +227,8 @@ function Admin() {
               // value={}
               // onChange={handleInputChange}
             />
-            <button>Ajouter</button>
+            <button type="submit">Ajouter</button>
+            </form>
           </Collapse>
           <Collapse title="Supprimer une bière">
             <input type="text" placeholder="ID de la bière" />
@@ -171,7 +244,6 @@ function Admin() {
             <button>Modifier</button>
           </Collapse>
         </div>
-
         <div>
           <h2>Brasseries</h2>
           <Collapse title="Ajouter une brasserie">
@@ -215,10 +287,20 @@ function Admin() {
             }}>Supprimer</button>
           </Collapse>
           <Collapse title="Modifier une brasserie">
-          <input type="text" placeholder="Pays de la brasserie" />
-            <input type="text" placeholder="Date de création de la brasserie" />
-            <input type="text" placeholder="Logo de la brasserie" />
-            <button>Modifier</button>
+            <input type="number" placeholder="ID de la brasserie" id="breweryIdToUpdate" />
+            {/* <input
+              type="text"
+              name="name"
+              placeholder="Nom de la brasserie"
+              value={breweryName}
+              onChange={(e) => setBreweryName(e.target.value)}
+            />
+           */}
+            <button onClick={() => {
+              const id = parseInt((document.getElementById('breweryIdToUpdate') as HTMLInputElement).value);
+              handleUpdateBrewery(id);
+            }}>Rechercher</button>
+          
           </Collapse>
         </div>
       </div>
