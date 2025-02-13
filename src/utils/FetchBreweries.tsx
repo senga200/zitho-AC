@@ -1,9 +1,11 @@
 
 import { Brewery } from '../types/Brewery';
+const BASE_URL = 'http://localhost:5000/api/v1/breweries';
+
 
 async function fetchBreweries(): Promise<Brewery[]> {
   try {
-    const response = await fetch('http://localhost:5000/api/v1/breweries');
+    const response = await fetch(`${BASE_URL}`);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
@@ -16,4 +18,70 @@ async function fetchBreweries(): Promise<Brewery[]> {
   }
 }
 
-export { fetchBreweries };
+//////////////CRUD BRASSERIES////////
+
+  async function fetchBreweryById(id: number): Promise<Brewery | null> {
+    try {
+      const response = await fetch(`${BASE_URL}/${id}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Error fetching brewery with ID ${id}:`, error);
+      return null;
+    }
+  }
+  
+  async function addBrewery(brewery: Brewery): Promise<Brewery | null> {
+    try {
+      const response = await fetch(`${BASE_URL}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(brewery),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error adding brewery:', error);
+      return null;
+    }
+  }
+  
+  async function updateBrewery(id: number, updatedBrewery: Partial<Brewery>): Promise<Brewery | null> {
+    try {
+      const response = await fetch(`${BASE_URL}/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedBrewery),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error(`Error updating brewery with ID ${id}:`, error);
+      return null;
+    }
+  }
+
+  async function deleteBrewery(id: number): Promise<boolean> {
+    try {
+      const response = await fetch(`${BASE_URL}/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return true;
+    } catch (error) {
+      console.error(`Error deleting brewery with ID ${id}:`, error);
+      return false;
+    }
+  }
+
+
+
+export { fetchBreweries, fetchBreweryById, addBrewery, updateBrewery, deleteBrewery };
