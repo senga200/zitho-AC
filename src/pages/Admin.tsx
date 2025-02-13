@@ -152,7 +152,22 @@ function Admin() {
       console.error("Erreur lors de l'ajout de la bière :", error);
     }
   }
- 
+
+   const handleDeleteBeer = async (id: number) => {
+    try {
+      const response = await fetch(`http://localhost:5000/api/v1/beers/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP! Statut: ${response.status}`);
+      }
+      const data = await response.json();
+      console.log("Bière supprimée :", data);
+    } catch (error) {
+      console.error("Erreur lors de la suppression de la bière :", error);
+    }
+  }
+
 
   if (!isAuthenticated) {
     return (
@@ -231,8 +246,12 @@ function Admin() {
             </form>
           </Collapse>
           <Collapse title="Supprimer une bière">
-            <input type="text" placeholder="ID de la bière" />
-            <button>Supprimer</button>
+            <input type="number" placeholder="ID de la bière" id="beerIdToDelete" />
+            <button onClick={() => {
+              const id = parseInt((document.getElementById('beerIdToDelete') as HTMLInputElement).value);
+              handleDeleteBeer(id);
+            }}>Supprimer</button>
+            
           </Collapse>
           <Collapse title="Modifier une bière">
             <input type="text" placeholder="Nom de la bière" />
