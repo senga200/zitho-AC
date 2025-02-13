@@ -25,7 +25,7 @@ export { fetchBeers };
 
 async function fetchBeersById(id: number): Promise<Beer | null> {
     try {
-        const response = await fetch(`${BASE_URL}/beers/${id}`);
+        const response = await fetch(`${BASE_URL}/${id}`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -55,7 +55,7 @@ async function addBeer(beer: Beer): Promise<Beer | null> {
 
 async function updateBeer(id: number, updatedBeer: Partial<Beer>): Promise<Beer | null> {
     try {
-        const response = await fetch(`${BASE_URL}/beers/${id}`, {
+        const response = await fetch(`${BASE_URL}/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(updatedBeer),
@@ -72,7 +72,7 @@ async function updateBeer(id: number, updatedBeer: Partial<Beer>): Promise<Beer 
 
 async function deleteBeer(id: number): Promise<void> {
   try {
-    const response = await fetch(`${BASE_URL}/beers/${id}`, { method: 'DELETE' });
+    const response = await fetch(`${BASE_URL}/${id}`, { method: 'DELETE' });
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }

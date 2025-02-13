@@ -1,8 +1,9 @@
-
 import { useState, useEffect } from "react";
 import Collapse from "../components/Collapse";
 import { fetchBreweries, fetchBreweryById, addBrewery, updateBrewery, deleteBrewery } from "../utils/FetchBreweries";
+import { fetchBeers, fetchBeersById, deleteBeer, addBeer } from "../utils/FetchBeers";
 import { Brewery } from "../types/Brewery";
+import { Beer } from "../types/Beer";
 
 
 
@@ -39,8 +40,6 @@ function Admin() {
   const [breweryIdToUpdate, setBreweryIdToUpdate] = useState<number | "">("");
   const [breweryToEdit, setBreweryToEdit] = useState<Brewery | null>(null);
   const [updatedBreweryData, setUpdatedBreweryData] = useState<Brewery | null>(null);
-
-
   const [breweryIdToSearch, setBreweryIdToSearch] = useState<number | "">("");
   const [displayBrewery, setDisplayBrewery] = useState<{ id?: number; name?: string; country?: string } | null>(null);
   const [message, setMessage] = useState<string>("");
@@ -128,8 +127,72 @@ function Admin() {
   };
   
   
+///gestion des bières
+  const [beers, setBeers] = useState<Beer[]>([]);
+  //const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
+  //const [beerToEdit, setBeerToEdit] = useState<Beer | null>(null);
+  //const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
+  const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
+  const [displayBeer, setDisplayBeer] = useState<{ beer?: Beer } | null>(null);
+
+  const [messageBeer, setMessageBeer] = useState<string>("");
+
+  const fetchAllBeers = async () => {
+    const data = await fetchBeers();
+    setBeers(data);
+  };
+  useEffect(() => {
+    fetchAllBeers();
+  }, []);
+
+  const handleSearchBeerById = async () => {
+    if (!beerIdToSearch) return;
+    const response = await fetchBeersById(Number(beerIdToSearch));
+    if (response) {
+      setDisplayBeer({ beer: response });
+      console.log("bière en question", response);
+      setMessageBeer("");
+    } else {
+      setDisplayBeer(null);
+      setMessageBeer("Aucune bière trouvée avec cet ID.");
+    }
+  };
+
+  const handleAddBeer = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData(e.target as HTMLFormElement);
+    const newBeer = {
+      beer: null, 
+      beer_id: 0, 
+      beer_name: formData.get("beer_name") as string,
+      description: formData.get("description") as string,
+      abv: Number(formData.get("abv")),
+      category: null,
+      brewery_id: 0,
+      created_at: formData.get("created_at") as string,
+      logo: formData.get("logo") as string,
+    };
+    await addBeer(newBeer);
   
-  
+    setMessage("Beer ajoutée avec succès.");
+    fetchAllBeers (); // rfesh la liste après ajout
+  };
+
+  const handleDeleteBeer = async (id:number) => {
+    const confirmDelete = window.confirm(`Etes-vous surr de vouloir supprimer la bière ID ${id} ?`);
+    
+    if (confirmDelete) {
+      await deleteBeer(id);
+      setMessageBeer("Bière supprimée!");
+      setDisplayBeer(null);
+      fetchAllBeers();
+    } else {
+      setMessageBeer("Suppression annulée.");
+    }
+  };
+
+  console.log("displayBeer state:", displayBeer);
+
 
   if (!isAuthenticated) {
     return (
@@ -157,6 +220,8 @@ function Admin() {
   return (
     <div>
       <h2>Administration</h2>
+      <div>
+      <h3>Gestion des brasseries</h3>
       <Collapse title="Voir toutes les brasseries">
       <button onClick={fetchAllBreweries }>go les brasseries</button>
       <ul>
@@ -236,8 +301,54 @@ function Admin() {
   )}
 
   {message && <p style={{ color: "green" }}>{message}</p>}
-</Collapse>
+      </Collapse>
+      </div>
+      <div>
+      <h3>Gestion des bières</h3>
+      <Collapse title="Voir toutes les bières">
+      <button onClick={fetchAllBeers}>go les bières</button>
+      <ul>
+      {beers.map((beer) => (
+      <li key={beer.beer_id}>{beer.beer_name} - {beer.beer_id}</li>
+      ))}
+    </ul>
+      </Collapse>
 
+      <Collapse title="Ajouter une bière">
+      <form onSubmit={handleAddBeer}>
+        <input type="text" name="beer_name" placeholder="Nom de la bière" />
+        <input type="text" name="description" placeholder="Description" />
+        <input type="number" name="abv" placeholder="ABV" />
+        <input type="number" name="brewery_id" placeholder="ID de la brasserie" />
+        <input type="text" name="created_at" placeholder="Date de création" />
+        <input type="text" name="logo" placeholder="Logo" />
+        <button type="submit">Ajouter</button>
+      </form>
+      </Collapse>
+      <Collapse
+    title="Supprimer une bière">
+    <input
+      type="number"
+      placeholder="ID de la bière"
+      value={beerIdToSearch}
+      onChange={(e) => setBeerIdToSearch(Number(e.target.value))}
+      />
+    <button onClick={handleSearchBeerById}>
+    Rechercher
+    </button>
+    {displayBeer && displayBeer.beer ? (
+  <p>Bière trouvée : {displayBeer.beer.name}</p>
+) : (
+  <p>Aucune bière trouvée.</p>
+)}
+    <button onClick={() => handleDeleteBeer(Number(beerIdToSearch))}>
+    🗑️ Supprimer
+    </button>
+    {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
+      </Collapse>
+
+
+      </div>
     </div>
   );
 }
