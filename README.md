@@ -1,50 +1,92 @@
-# React + TypeScript + Vite
+Le projet Zythologists est une application complète permettant de découvrir et gérer un catalogue de bières et brasseries. Il est composé de deux parties principales :
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Un backend Node.js avec une API REST connectée à PostgreSQL (déployée sur Neon).
 
-Currently, two official plugins are available:
+Un frontend React permettant d'afficher et d'interagir avec les données (déployé sur Vercel).
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Zythologists Frontend 🍺
 
-## Expanding the ESLint configuration
+Ce projet est l'interface utilisateur de l'application Zythologists, permettant d'afficher et gérer les bières, les brasseries et les avis des utilisateurs. L'application est construite avec React, et interagit avec une API REST déployée sur Neon.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 🚀 Fonctionnalités
 
-- Configure the top-level `parserOptions` property like this:
+- Affichage des bières et des brasseries avec leurs détails.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+- Recherche de bières et brasseries.
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+- Ajout, modification et suppression de brasseries sur l'éspace Administrateur.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+## 🛠️ Technologies utilisées
+
+React + TypeScript pour l'interface utilisateur.
+
+React Router : Gestion de la navigation entre les pages.
+
+Vercel : Déploiement de l'application frontend.
+
+📂 Structure du projet
+
+/src : Contient le code source du projet.
+
+/pages : Composants des différentes pages (bières, brasseries, admin, etc.).
+
+/components : Composants réutilisables (Navbar, Collapse, etc.).
+
+/utils : Fetches pour interagir avec l'API backend.
+
+## ⚙️ Installation et configuration
+
+Prérequis
+
+Node.js installé
+
+Un backend opérationnel (API disponible sur Neon)
+
+## 🚶‍➡️ Étapes
+Cloner le dépôt :
+git clone https://github.com/senga200/zitho-AC.git
+
+Installer les dépendances :
+npm install
+
+Créer un fichier .env à la racine du projet :
+VITE_API_BASE_URL=https://zythologueapi-ac.onrender.com/api/v1/beers
+ou https://zythologueapi-ac.onrender.com/api/v1/breweries
+
+Lancer l'application :
+npm run dev
+
+L'interface sera accessible sur http://localhost:5173
+
+
+## 🌍 Déploiement
+
+Le frontend est déployé sur Vercel.
+
+URL de l'application : https://zitho-f7lr60daw-senga200s-projects.vercel.app/
+
+🔗 API Backend
+
+Ce projet consomme l'API backend disponible ici : 
+https://zythologueapi-ac.onrender.com/api/v1/beers
+https://zythologueapi-ac.onrender.com/api/v1/breweries
+
+Le swagger est disponible pour tester les requêtes : https://zythologueapi-ac.onrender.com/api-docs
+
+## 🎨 Aperçu
+
+![à mettre](image.png)
+
+## 🛠️ Améliorations futures
+
+Terminer l'interface administrateur.
+
+Améliorer l'UX/UI de l'application.
+
+Meilleure gestion des erreurs et feedback utilisateur.
+
+
+
+
+
