@@ -10,6 +10,7 @@ import { Beer } from "../types/Beer";
 
 
 function Admin() {
+///////////HOOKS BRASSERIE /////////////////////////////
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [breweryIdToUpdate, setBreweryIdToUpdate] = useState<number | "">("");
   const [breweryToEdit, setBreweryToEdit] = useState<Brewery | null>(null);
@@ -17,7 +18,10 @@ function Admin() {
   const [breweryIdToSearch, setBreweryIdToSearch] = useState<number | "">("");
   const [displayBrewery, setDisplayBrewery] = useState<{ id?: number; name?: string; country?: string } | null>(null);
   const [message, setMessage] = useState<string>("");
-
+  useEffect(() => {
+    fetchAllBreweries ();
+  }, []);
+///////////HOOKS BIERES /////////////////////////////
   const [beers, setBeers] = useState<Beer[]>([]);
   //const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
   //const [beerToEdit, setBeerToEdit] = useState<Beer | null>(null);
@@ -25,15 +29,11 @@ function Admin() {
   const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
   const [displayBeer, setDisplayBeer] = useState<{ beer?: Beer } | null>(null);
   const [messageBeer, setMessageBeer] = useState<string>("");
-
-  useEffect(() => {
-    fetchAllBreweries ();
-  }, []);
   useEffect(() => {
     fetchAllBeers();
   }, []);
 
-  ///////gestion connexion
+  ///////gestion connexion ///////
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   //const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,30 +42,23 @@ function Admin() {
 
 if (!authContext) {
   console.error("Erreur : AuthContext pas là");
-  return <div>Erreur d'authentification</div>; // Affiche un message au lieu de retourner null
+  return <div>Déso, auth error</div>; 
 }
 
 const { isAuthenticated, login, logout } = authContext;
-
-  //const ADMIN_EMAIL = "test";
-  //const ADMIN_PASSWORD = "test";
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!login(email, password)) {
-      setError("Email ou mot de passe incorrect !");
+      setError("Déso, wrong password or email !");
     }else {
       setError("");
       //setIsAuthenticated(false);
     }
   };
-  // localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
-  // console.log("isAuthenticated", isAuthenticated);
 
-  
-
-//gestion des brasseries
+///////////gestion des brasseries//////
   const fetchAllBreweries  = async () => {
     const data = await fetchBreweries();
     setBreweries(data);
@@ -82,7 +75,7 @@ const { isAuthenticated, login, logout } = authContext;
       setMessage("Aucune brasserie trouvée avec cet ID.");
     }
   };
-  
+
   const handleAddBrewery = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
@@ -127,6 +120,7 @@ const { isAuthenticated, login, logout } = authContext;
       setMessage("Aucune brasserie trouvée avec cet ID.");
     }
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!updatedBreweryData) return;
     
@@ -135,6 +129,7 @@ const { isAuthenticated, login, logout } = authContext;
       [e.target.name]: e.target.value,
     });
   };
+
   const handleUpdateBrewery = async () => {
     if (!breweryToEdit || !updatedBreweryData) return;
   
@@ -145,7 +140,7 @@ const { isAuthenticated, login, logout } = authContext;
   };
   
   
-///gestion des bières
+/////////////gestion des bières //////
 
   const fetchAllBeers = async () => {
     const data = await fetchBeers();
@@ -162,7 +157,7 @@ const { isAuthenticated, login, logout } = authContext;
       setMessageBeer("");
     } else {
       setDisplayBeer(null);
-      setMessageBeer("Aucune bière trouvée avec cet ID.");
+      setMessageBeer("no beer found with this id.");
     }
   };
 
@@ -184,20 +179,20 @@ const { isAuthenticated, login, logout } = authContext;
     console.log("2. Données envoyées à l'API:", JSON.stringify(newBeer));
 
   
-    setMessage("Beer ajoutée avec succès.");
+    setMessage("Berr added successfully.");
     fetchAllBeers (); // rfesh la liste après ajout
   };
 
   const handleDeleteBeer = async (id:number) => {
-    const confirmDelete = window.confirm(`Etes-vous surr de vouloir supprimer la bière ID ${id} ?`);
+    const confirmDelete = window.confirm(`Are you sure to delete this beer ${id} ?`);
     
     if (confirmDelete) {
       await deleteBeer(id);
-      setMessageBeer("Bière supprimée!");
+      setMessageBeer("Beer deleted !");
       setDisplayBeer(null);
       fetchAllBeers();
     } else {
-      setMessageBeer("Suppression annulée.");
+      setMessageBeer("delete canceled.");
     }
   };
 
@@ -207,7 +202,7 @@ const { isAuthenticated, login, logout } = authContext;
   if (!isAuthenticated) {
     return (
       <div>
-        <h2>Connexion Administrateur</h2>
+        <h2>You are admin, please log in</h2>
         <form onSubmit={handleSubmit}>
         <input
         type="text"
@@ -217,11 +212,11 @@ const { isAuthenticated, login, logout } = authContext;
         />
         <input
         type="password"
-        placeholder="Mot de passe"
+        placeholder="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit">Se connecter</button>
+        <button type="submit">Log In</button>
         </form>
         {error && <p style={{ color: "red" }}>{error}</p>}
       </div>
@@ -229,76 +224,76 @@ const { isAuthenticated, login, logout } = authContext;
   } else {
   return (
     <div>
-      <h2>Administration</h2>
-      <button onClick={logout}>Se déconnecter</button>
+      <h2>Admin area</h2>
+      <button onClick={logout}>Log out</button>
       <div>
-      <h3>Gestion des brasseries</h3>
-      <Collapse title="Voir toutes les brasseries">
-      <button onClick={fetchAllBreweries }>go les brasseries</button>
+      <h3>Breweries Managment</h3>
+      <Collapse title="SEE ALL BREWERIES">
+      <button onClick={fetchAllBreweries }>go breweries</button>
       <ul>
       {breweries.map((brewery) => (
       <li key={brewery.brewery_id}>{brewery.name} - {brewery.brewery_id}</li>
       ))}
     </ul>
       </Collapse>
-      <Collapse title="Supprimer une brasserie">
+      <Collapse title="DELETE A BREWERY">
       <input
       type="number"
-      placeholder="ID de la brasserie"
+      placeholder="brewery ID"
       value={breweryIdToSearch}
       onChange={(e) => setBreweryIdToSearch(Number(e.target.value))}
       />
       <button onClick={handleSearchBreweryById}>
-      Rechercher
+      Find
       </button>
-      {displayBrewery && <p>Brasserie trouvée : {displayBrewery.name}</p>}
+      {displayBrewery && <p>Brewery find : {displayBrewery.name}</p>}
       <button onClick={() => handleDeleteBrewery(Number(breweryIdToSearch))}>
-      🗑️ Supprimer
+      🗑️ delete !
       </button>
       {message && <p style={{ color: "green" }}>{message}</p>}
       </Collapse>
-      <Collapse title="Ajouter une brasserie">
+      <Collapse title="ADD A BREWERY">
       <form onSubmit={handleAddBrewery}>
-        <input type="text" name="name" placeholder="Nom de la brasserie" />
-        <input type="text" name="country" placeholder="Pays de la brasserie" />
-        <input type="text" name="created_at" placeholder="Date de création" />
-        <input type="text" name="logo" placeholder="Logo de la brasserie" />
-        <button type="submit">Ajouter</button>
+        <input type="text" name="name" placeholder="Brewery name" />
+        <input type="text" name="country" placeholder="Brewery country" />
+        <input type="text" name="created_at" placeholder="Created at" />
+        <input type="text" name="logo" placeholder="Logo" />
+        <button type="submit">Add</button>
       </form>
       </Collapse>
-      <Collapse title="Modifier une brasserie">
+      <Collapse title="UPDATE A BREWERY">
       <input 
       type="number" 
       name="id" 
-      placeholder="ID de la brasserie" 
+      placeholder="brewery ID" 
       value={breweryIdToUpdate}
       onChange={(e) => setBreweryIdToUpdate(Number(e.target.value))}
       />
-      <button onClick={handleSearchBreweryToUpdate}>Rechercher</button>
+      <button onClick={handleSearchBreweryToUpdate}>Find</button>
 
   {breweryToEdit && updatedBreweryData && (
     <div>
-      <h3>Modifier : {breweryToEdit.name}</h3>
+      <h3>Update : {breweryToEdit.name}</h3>
       <input 
         type="text" 
         name="name" 
         value={updatedBreweryData.name || ""} 
         onChange={handleInputChange} 
-        placeholder="Nom de la brasserie"
+        placeholder="Brewery Name" 
       />
       <input 
         type="text" 
         name="country" 
         value={updatedBreweryData.country || ""}  
         onChange={handleInputChange} 
-        placeholder="Pays"
+        placeholder="Country"
       />
       <input 
         type="text" 
         name="created_at" 
         value={updatedBreweryData.created_at || ""} 
         onChange={handleInputChange} 
-        placeholder="Date de création"
+        placeholder="Created at"
       />
       <input 
         type="text" 
@@ -307,7 +302,7 @@ const { isAuthenticated, login, logout } = authContext;
         onChange={handleInputChange} 
         placeholder="Logo"
       />
-      <button onClick={handleUpdateBrewery}>Enregistrer</button>
+      <button onClick={handleUpdateBrewery}>Update</button>
     </div>
   )}
 
@@ -315,9 +310,9 @@ const { isAuthenticated, login, logout } = authContext;
       </Collapse>
       </div>
       <div>
-      <h3>Gestion des bières</h3>
-      <Collapse title="Voir toutes les bières">
-      <button onClick={fetchAllBeers}>go les bières</button>
+      <h3>Beer managment</h3>
+      <Collapse title="SEE ALL BEERS">
+      <button onClick={fetchAllBeers}>go beers</button>
       <ul>
       {beers.map((beer) => (
       <li key={beer.beer_id}>{beer.beer_name} - {beer.beer_id}</li>
@@ -325,36 +320,36 @@ const { isAuthenticated, login, logout } = authContext;
     </ul>
       </Collapse>
 
-      <Collapse title="Ajouter une bière">
+      <Collapse title="ADD A BEER">
       <form onSubmit={handleAddBeer}>
-        <input type="text" name="beer_name" placeholder="Nom de la bière" />
+        <input type="text" name="beer_name" placeholder="Beer name" />
         <input type="text" name="description" placeholder="Description" />
         <input type="number" name="abv" placeholder="ABV" />
-        <input type="number" name="brewery_id" placeholder="ID de la brasserie" />
-        <input type="text" name="created_at" placeholder="Date de création" />
+        <input type="number" name="brewery_id" placeholder="Brewery ID" />
+        {/* <input type="text" name="created_at" placeholder="Date de création" /> */}
         <input type="text" name="logo" placeholder="Logo" />
-        <input type="number" name="category_id" placeholder="ID de la catégorie" />
-        <button type="submit">Ajouter</button>
+        <input type="number" name="category_id" placeholder="Category ID" />
+        <button type="submit">Add</button>
       </form>
       </Collapse>
       <Collapse
-    title="Supprimer une bière">
+    title="DELETE A BEER">
     <input
       type="number"
-      placeholder="ID de la bière"
+      placeholder="beer ID"
       value={beerIdToSearch}
       onChange={(e) => setBeerIdToSearch(Number(e.target.value))}
       />
     <button onClick={handleSearchBeerById}>
-    Rechercher
+    Find !
     </button>
     {displayBeer && displayBeer.beer ? (
-  <p>Bière trouvée : {displayBeer.beer.name}</p>
+  <p>Beer find : {displayBeer.beer.name}</p>
 ) : (
-  <p>Aucune bière trouvée.</p>
+  <p>No beer finded.</p>
 )}
     <button onClick={() => handleDeleteBeer(Number(beerIdToSearch))}>
-    🗑️ Supprimer
+    🗑️ Delete !
     </button>
     {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
       </Collapse>
