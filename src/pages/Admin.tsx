@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { AuthContext } from "../store/AuthContext";
 import Collapse from "../components/Collapse";
 import { fetchBreweries, fetchBreweryById, addBrewery, updateBrewery, deleteBrewery } from "../utils/FetchBreweries";
 import { fetchBeers, fetchBeersById, deleteBeer, addBeer } from "../utils/FetchBeers";
@@ -9,33 +10,6 @@ import { Beer } from "../types/Beer";
 
 
 function Admin() {
-
-  ///////gestion connexion
-
-  const ADMIN_EMAIL = "test";
-  const ADMIN_PASSWORD = "test";
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [error, setError] = useState("");
-
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      setIsAuthenticated(true);
-      setError("");
-    } else {
-      setError("Email ou mot de passe incorrect !");
-      setIsAuthenticated(false);
-    }
-  };
-  // localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
-  // console.log("isAuthenticated", isAuthenticated);
-
-//gestion des brasseries
   const [breweries, setBreweries] = useState<Brewery[]>([]);
   const [breweryIdToUpdate, setBreweryIdToUpdate] = useState<number | "">("");
   const [breweryToEdit, setBreweryToEdit] = useState<Brewery | null>(null);
@@ -44,15 +18,59 @@ function Admin() {
   const [displayBrewery, setDisplayBrewery] = useState<{ id?: number; name?: string; country?: string } | null>(null);
   const [message, setMessage] = useState<string>("");
 
+  const [beers, setBeers] = useState<Beer[]>([]);
+  //const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
+  //const [beerToEdit, setBeerToEdit] = useState<Beer | null>(null);
+  //const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
+  const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
+  const [displayBeer, setDisplayBeer] = useState<{ beer?: Beer } | null>(null);
+  const [messageBeer, setMessageBeer] = useState<string>("");
 
+  useEffect(() => {
+    fetchAllBreweries ();
+  }, []);
+  useEffect(() => {
+    fetchAllBeers();
+  }, []);
+
+  ///////gestion connexion
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  //const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [error, setError] = useState("");
+  const authContext = useContext(AuthContext);
+
+if (!authContext) {
+  console.error("Erreur : AuthContext pas là");
+  return <div>Erreur d'authentification</div>; // Affiche un message au lieu de retourner null
+}
+
+const { isAuthenticated, login, logout } = authContext;
+
+  //const ADMIN_EMAIL = "test";
+  //const ADMIN_PASSWORD = "test";
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!login(email, password)) {
+      setError("Email ou mot de passe incorrect !");
+    }else {
+      setError("");
+      //setIsAuthenticated(false);
+    }
+  };
+  // localStorage.setItem("isAuthenticated", JSON.stringify(isAuthenticated));
+  // console.log("isAuthenticated", isAuthenticated);
+
+  
+
+//gestion des brasseries
   const fetchAllBreweries  = async () => {
     const data = await fetchBreweries();
     setBreweries(data);
   };
-  useEffect(() => {
-    fetchAllBreweries ();
-  }, []);
-  
+
   const handleSearchBreweryById = async () => {
     if (!breweryIdToSearch) return;
     const response = await fetchBreweryById(Number(breweryIdToSearch));
@@ -128,21 +146,12 @@ function Admin() {
   
   
 ///gestion des bières
-  const [beers, setBeers] = useState<Beer[]>([]);
-  //const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
-  //const [beerToEdit, setBeerToEdit] = useState<Beer | null>(null);
-  //const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
-  const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
-  const [displayBeer, setDisplayBeer] = useState<{ beer?: Beer } | null>(null);
-  const [messageBeer, setMessageBeer] = useState<string>("");
 
   const fetchAllBeers = async () => {
     const data = await fetchBeers();
     setBeers(data);
   };
-  useEffect(() => {
-    fetchAllBeers();
-  }, []);
+
 
   const handleSearchBeerById = async () => {
     if (!beerIdToSearch) return;
@@ -221,6 +230,7 @@ function Admin() {
   return (
     <div>
       <h2>Administration</h2>
+      <button onClick={logout}>Se déconnecter</button>
       <div>
       <h3>Gestion des brasseries</h3>
       <Collapse title="Voir toutes les brasseries">
