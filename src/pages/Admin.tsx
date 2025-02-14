@@ -333,7 +333,7 @@ const { isAuthenticated, login, logout } = authContext;
       </form>
       </Collapse>
       <Collapse
-    title="DELETE A BEER">
+      title="DELETE A BEER">
     <input
       type="number"
       placeholder="beer ID"

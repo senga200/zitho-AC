@@ -1,7 +1,7 @@
 
 import { Beer } from '../types/Beer';
 
-const BASE_URL = 'http://localhost:5000/api/v1/beers';
+const BASE_URL = 'https://zythologueapi-ac.onrender.com/api/v1/beers';
 
 async function fetchBeers(): Promise<Beer[]> {
   try {
