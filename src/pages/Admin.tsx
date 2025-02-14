@@ -134,7 +134,6 @@ function Admin() {
   //const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
   const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
   const [displayBeer, setDisplayBeer] = useState<{ beer?: Beer } | null>(null);
-
   const [messageBeer, setMessageBeer] = useState<string>("");
 
   const fetchAllBeers = async () => {
@@ -162,17 +161,19 @@ function Admin() {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const newBeer = {
-      beer: null, 
       beer_id: 0, 
       beer_name: formData.get("beer_name") as string,
       description: formData.get("description") as string,
+      // logo_url: formData.get("logo") as string,
       abv: Number(formData.get("abv")),
-      category: null,
-      brewery_id: 0,
-      created_at: formData.get("created_at") as string,
-      logo: formData.get("logo") as string,
+      brewery_id: Number(formData.get("brewery_id")),
+      category_id: Number(formData.get("category_id")),
     };
+    console.log("1. Données envoyées à l'API:", JSON.stringify(newBeer));
+
     await addBeer(newBeer);
+    console.log("2. Données envoyées à l'API:", JSON.stringify(newBeer));
+
   
     setMessage("Beer ajoutée avec succès.");
     fetchAllBeers (); // rfesh la liste après ajout
@@ -322,6 +323,7 @@ function Admin() {
         <input type="number" name="brewery_id" placeholder="ID de la brasserie" />
         <input type="text" name="created_at" placeholder="Date de création" />
         <input type="text" name="logo" placeholder="Logo" />
+        <input type="number" name="category_id" placeholder="ID de la catégorie" />
         <button type="submit">Ajouter</button>
       </form>
       </Collapse>

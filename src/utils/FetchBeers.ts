@@ -37,8 +37,9 @@ async function fetchBeersById(id: number): Promise<Beer | null> {
 }
 
 async function addBeer(beer: Beer): Promise<Beer | null> {
+  console.log("Beer to add:", beer);
     try {
-        const response = await fetch(`${BASE_URL}/beers`, {
+        const response = await fetch(`${BASE_URL}/`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(beer),
