@@ -17,6 +17,7 @@
 // }
 
 export interface Beer {
+    beer?: Beer | null;
     beer_id: number;             // ID unique de la bière
     name: string;           // Nom de la bière
     description: string;         // Description de la bière

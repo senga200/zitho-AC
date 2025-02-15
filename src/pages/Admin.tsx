@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { AuthContext } from "../store/AuthContext";
 import Collapse from "../components/Collapse";
 import { fetchBreweries, fetchBreweryById, addBrewery, updateBrewery, deleteBrewery } from "../utils/FetchBreweries";
-import { fetchBeers, fetchBeersById, deleteBeer, addBeer } from "../utils/FetchBeers";
+import { fetchBeers, fetchBeersById, deleteBeer, addBeer, updateBeer } from "../utils/FetchBeers";
 import { Brewery } from "../types/Brewery";
 import { Beer } from "../types/Beer";
 
@@ -23,9 +23,9 @@ function Admin() {
   }, []);
 ///////////HOOKS BIERES /////////////////////////////
   const [beers, setBeers] = useState<Beer[]>([]);
-  //const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
-  //const [beerToEdit, setBeerToEdit] = useState<Beer | null>(null);
-  //const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
+const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
+  const [beerToEdit, setBeerToEdit] = useState<Beer | null>(null);
+  const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
   const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
   const [displayBeer, setDisplayBeer] = useState<{ beer?: Beer } | null>(null);
   const [messageBeer, setMessageBeer] = useState<string>("");
@@ -75,7 +75,7 @@ function Admin() {
       setMessage("");
     } else {
       setDisplayBrewery(null);
-      setMessage("Aucune brasserie trouvée avec cet ID.");
+      setMessage("no brewery with this id.");
     }
   };
 
@@ -115,7 +115,7 @@ function Admin() {
     
     if (response?.brewery) {
       setBreweryToEdit(response.brewery);
-      setUpdatedBreweryData(response.brewery); // Pré-remplit le formulaire
+      setUpdatedBreweryData(response.brewery); // Préremplit le formulaire
       setMessage("");
     } else {
       setBreweryToEdit(null);
@@ -134,7 +134,8 @@ function Admin() {
 
   const handleUpdateBrewery = async () => {
     if (!breweryToEdit || !updatedBreweryData) return;
-  
+    
+    // On copie les données actuelles du brewery dans un nouvel objet pour ne pas modifier le original
     await updateBrewery(breweryToEdit.brewery_id, updatedBreweryData);
     setMessage("Brewery updated successfully !");
     setBreweryToEdit(null);
@@ -149,14 +150,13 @@ function Admin() {
     setBeers(data);
   };
 
-
   const handleSearchBeerById = async () => {
     if (!beerIdToSearch) return;
     const response = await fetchBeersById(Number(beerIdToSearch));
-    if (response) {
-      setDisplayBeer({ beer: response });
-      console.log("bière en question", response);
+    if (response?.beer) {
+      setDisplayBeer({ beer: response.beer });
       setMessageBeer("");
+      console.log("bière en question", response);
     } else {
       setDisplayBeer(null);
       setMessageBeer("no beer found with this id.");
@@ -194,11 +194,40 @@ function Admin() {
       setDisplayBeer(null);
       fetchAllBeers();
     } else {
-      setMessageBeer("delete canceled.");
+      setMessageBeer("deleting canceled.");
     }
   };
 
   console.log("displayBeer state:", displayBeer);
+
+  const handleSearchBeerToUpdate = async () => {
+    if (!beerIdToUpdate) return;
+    const response = await fetchBeersById(Number(beerIdToUpdate));
+
+    if (response?.beer) {
+      setBeerToEdit(response.beer);
+      setUpdatedBeerData(response.beer);
+      setMessageBeer("");
+    } else {
+      setBeerToEdit(null);
+      setMessageBeer("no beer found.");
+    }
+  };
+  const handleInputChangeBeer = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!updatedBeerData) return;
+    
+    setUpdatedBeerData({
+     ...updatedBeerData,
+      [e.target.name]: e.target.value,
+    });
+  };
+  const handleUpdateBeer = async () => {
+    if (!beerToEdit || !updatedBeerData) return;
+    await updateBeer(beerToEdit.beer_id, updatedBeerData);
+    setMessageBeer("Beer updated successfully!");
+    setBeerToEdit(null);
+    fetchAllBeers();
+  };
 
 
   if (!isAuthenticated) {
@@ -355,6 +384,69 @@ function Admin() {
     </button>
     {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
       </Collapse>
+      <Collapse title="UPDATE A BEER">
+      <input
+      type="number"
+      name="beer_id"
+      placeholder="Beer ID"
+      value={beerIdToUpdate}
+      onChange={(e) => setBeerIdToUpdate(Number(e.target.value))}
+      />
+      <button onClick={handleSearchBeerToUpdate}>
+      Find
+      </button>
+      {beerToEdit && updatedBeerData && (
+        <div>
+          <h3>Update : {beerToEdit.name}</h3>
+          <input
+            type="text"
+            name="name"
+            value={updatedBeerData.name || ""}
+            onChange={handleInputChangeBeer}
+            placeholder="Beer Name"
+          />
+          <input
+            type="text"
+            name="description"
+            value={updatedBeerData.description || ""}
+            onChange={handleInputChangeBeer}
+            placeholder="Description"
+          />
+          <input
+            type="number"
+            name="abv"
+            value={updatedBeerData.abv || ""}
+            onChange={handleInputChangeBeer}
+            placeholder="ABV"
+          />
+          <input
+            type="number"
+            name="brewery_id"
+            value={updatedBeerData.brewery_id || ""}
+            onChange={handleInputChangeBeer}
+            placeholder="Brewery ID"
+          />
+          <input
+            type="text"
+            name="logo"
+            value={updatedBeerData.logo_url || ""}
+            onChange={handleInputChangeBeer}
+            placeholder="Logo"
+          />
+          <input
+            type="number"
+            name="category_id"
+            value={updatedBeerData.category_id || ""}
+            onChange={handleInputChangeBeer}
+            placeholder="Category ID"
+          />
+          <button onClick={handleUpdateBeer}>Update</button>
+          {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
+        </div>
+      )}
+      </Collapse>
+
+
 
 
       </div>
