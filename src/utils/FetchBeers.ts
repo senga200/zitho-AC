@@ -38,21 +38,22 @@ async function fetchBeersById(id: number): Promise<Beer | null> {
 
 async function addBeer(beer: Beer): Promise<Beer | null> {
   console.log("Beer to add:", beer);
-    try {
-        const response = await fetch(`${BASE_URL}/`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(beer),
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return await response.json();
-      } catch (error) {
-        console.error('Error adding beer:', error);
-        return null;
-      }
-}
+  try {
+    const response = await fetch(`${BASE_URL}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(beer),
+    });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Erreur API (${response.status}): ${errorText}`);
+    }
+    return await response.json(); 
+  } catch (error) {
+    console.error("Error adding beer:", error);
+    throw error;
+  }
+  }
 
 async function updateBeer(id: number, updatedBeer: Partial<Beer>): Promise<Beer | null> {
     try {

@@ -41,7 +41,8 @@ async function fetchBreweries(): Promise<Brewery[]> {
         body: JSON.stringify(brewery),
       });
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`HTTP error! status: ${response.status} : ${errorText}`);
       }
       return await response.json();
     } catch (error) {

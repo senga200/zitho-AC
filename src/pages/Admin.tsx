@@ -39,13 +39,16 @@ function Admin() {
   //const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [error, setError] = useState("");
   const authContext = useContext(AuthContext);
+  
+  if (!authContext) {
+    console.error("Erreur : AuthContext pas là");
+    return <div>Déso, auth context error</div>; 
+  } else {
+    console.log("AuthContext OK est true !", authContext);
+  }
 
-if (!authContext) {
-  console.error("Erreur : AuthContext pas là");
-  return <div>Déso, auth error</div>; 
-}
-
-const { isAuthenticated, login, logout } = authContext;
+  // maintenant que authcontext n est pas null ou undefined on peut desctructurer et extraire les valeurs de l objet authcontext : isAuthenticated est , login (email+password), logout
+  const { isAuthenticated, login, logout } = authContext;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,13 +82,12 @@ const { isAuthenticated, login, logout } = authContext;
   const handleAddBrewery = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
-    const newBrewery = {
-      brewery: null, 
+    const newBrewery = { 
       brewery_id: 0, 
-      name: formData.get("name") as string,
-      country: formData.get("country") as string,
-      created_at: formData.get("created_at") as string,
-      logo: formData.get("logo") as string,
+      name: String(formData.get("name")),
+      country: String(formData.get("country")),
+      created_at: String(formData.get("created_at")),
+      logo: String(formData.get("logo")),
     };
     await addBrewery(newBrewery);
   
@@ -165,13 +167,13 @@ const { isAuthenticated, login, logout } = authContext;
     e.preventDefault();
     const formData = new FormData(e.target as HTMLFormElement);
     const newBeer = {
-      beer_id: 0, 
-      beer_name: formData.get("beer_name") as string,
-      description: formData.get("description") as string,
-      // logo_url: formData.get("logo") as string,
+      beer_id: 0,
+      name: String(formData.get("name")),
+      description: String(formData.get("description")), 
       abv: Number(formData.get("abv")),
       brewery_id: Number(formData.get("brewery_id")),
       category_id: Number(formData.get("category_id")),
+      logo_url: String(formData.get("logo")), 
     };
     console.log("1. Données envoyées à l'API:", JSON.stringify(newBeer));
 
@@ -315,14 +317,14 @@ const { isAuthenticated, login, logout } = authContext;
       <button onClick={fetchAllBeers}>go beers</button>
       <ul>
       {beers.map((beer) => (
-      <li key={beer.beer_id}>{beer.beer_name} - {beer.beer_id}</li>
+      <li key={beer.beer_id}>{beer.name} - {beer.beer_id}</li>
       ))}
     </ul>
       </Collapse>
 
       <Collapse title="ADD A BEER">
       <form onSubmit={handleAddBeer}>
-        <input type="text" name="beer_name" placeholder="Beer name" />
+        <input type="text" name="name" placeholder="Beer name" />
         <input type="text" name="description" placeholder="Description" />
         <input type="number" name="abv" placeholder="ABV" />
         <input type="number" name="brewery_id" placeholder="Brewery ID" />
