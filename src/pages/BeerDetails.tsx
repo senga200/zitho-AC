@@ -28,24 +28,26 @@ function BeerDetails() {
     console.log("Nos bières", beers);
     const beerDetails = beers.find(beer => beer.beer_id === Number(beer_id));
     console.log("Détails de la bière", beerDetails);
+    console.log("logo", beerDetails?.logo_url);
 
 
     return ( 
     <div className="beer-details">
+      <div className="header-details">
         <Link to="/beers">Retour à la liste</Link>
         <button onClick={goBack} className="back-button">
         Retour
-      </button>
-    <div className='details-container'>
-
-
+        </button>
+      </div>
+       
+      <div className='details-container'>
         <h2>{beerDetails?.beer_name}</h2>
         <h5 className='description'>{beerDetails?.description}</h5>
         <p><strong>Brewery : </strong>  {beerDetails?.brewery_name}</p>
         
         <p><strong>ABV : </strong>{beerDetails?.abv}°</p>
         <p><strong>Category : </strong> {beerDetails?.category_name}</p>
-        <img src={beerDetails?.logo_url} alt={beerDetails?.beer_name} /> 
+        <img src={beerDetails?.logo_url} alt={typeof beerDetails?.beer_name === 'string' ? beerDetails?.beer_name : ''} /> 
 
     </div>
            

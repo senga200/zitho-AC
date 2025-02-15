@@ -10,5 +10,7 @@ export interface Beer {
     abv: number;                 
     brewery_id: number;          
     category_id?: number;        
-    logo_url?: string;          
+    logo_url?: string;
+    brewery_name: string;
+    category_name?: string;          
 }

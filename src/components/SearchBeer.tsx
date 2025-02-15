@@ -22,7 +22,7 @@ function SearchBeer({ beers }: SearchBeerProps) {
 
     //  si beer.beer_name est défini ?
     const filteredResults = beers.filter((beer) =>
-      beer.beer_name && beer.beer_name.toLowerCase().includes(search.toLowerCase())
+      typeof beer.beer_name === 'string' && beer.beer_name.includes(search.toLowerCase())
     );
     setSearchResults(filteredResults);
   }, [search, beers]);

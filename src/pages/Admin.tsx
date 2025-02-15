@@ -177,6 +177,8 @@ const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
       brewery_id: Number(formData.get("brewery_id")),
       category_id: Number(formData.get("category_id")),
       logo_url: String(formData.get("logo")), 
+      brewery_name: String(formData.get("brewery_name")),
+      
     };
     console.log("1. Données envoyées à l'API:", JSON.stringify(newBeer));
 

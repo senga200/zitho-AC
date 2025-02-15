@@ -9,6 +9,11 @@
     font-family: 'Arial', sans-serif;
 }
 
+.header-details button {
+    margin-left: 2rem;
+
+}
+
 .description {
     font-size: 1rem;
     color: #333;
