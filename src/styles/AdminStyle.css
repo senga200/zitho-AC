@@ -3,12 +3,35 @@
     box-shadow: 0px 0px 10px rgba(239, 55, 55, 0);
 }
 
-.admin-area h2 {
+.admin-area h2, h3 {
     background-color: #ffae00;
     color: #242424;
     padding: 10px;
     border-radius: 8px 8px 0 0;
 }
+
+.admin-area h3 {
+    margin-top: 5rem;
+}
+
+.admin-area li {
+    color: white;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-description {
+    padding: 10px;
+    font-size: 20px;
+    line-height: 2;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-weight: 600;
+}
+
 
 .admin-header {
     background-color: #ffae00;
@@ -21,35 +44,24 @@
 }
 
 
-/* button {
-    background-color: #ffae00;
-    color: #242424;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 25px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-button:hover {
-    background-color: #ff8800;
-    color: #242424;
-    transition: 0.3s;
-    transform: scale(1.1);
-
-
-} */
-
 input[type="text"], input[type="number"], input[type="password"] {
-    width: 100%;
+    width: 90%;
     padding: 10px;
-    margin: 5px 0;
+
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
 form {
     margin-top: 10px;
+}
+
+input {
+    display: block;
+    margin: 10px;
+
+    transition: border-color 0.3s;
+
 }
 
 

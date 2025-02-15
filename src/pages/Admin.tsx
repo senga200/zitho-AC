@@ -23,7 +23,7 @@ function Admin() {
   // Removed duplicate useEffect for fetchAllBreweries
 ///////////HOOKS BIERES /////////////////////////////
   const [beers, setBeers] = useState<Beer[]>([]);
-const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
+  const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
   const [beerToEdit, setBeerToEdit] = useState<Beer | null>(null);
   const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
   const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
@@ -178,7 +178,7 @@ const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
       category_id: Number(formData.get("category_id")),
       logo_url: String(formData.get("logo")), 
       brewery_name: String(formData.get("brewery_name")),
-      
+
     };
     console.log("1. Données envoyées à l'API:", JSON.stringify(newBeer));
 
@@ -262,17 +262,16 @@ const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
     <div className="admin-area">
       <div className="admin-header">
         <h2>Admin area</h2>
-      <button onClick={logout}>Log out</button>
+        <button onClick={logout}>Log out</button>
       </div>
-      
+      <p className="admin-description">Here, you can manage breweries & beers. <br></br>Add, Delete, Update it's soooo fun ! </p>
       <div>
       <h3>Breweries Managment</h3>
       <Collapse title="SEE ALL BREWERIES">
-      <ul>
-      {breweries.map((brewery) => (
-      <li key={brewery.brewery_id}>{brewery.name} - {brewery.brewery_id}</li>
-      ))}
-    </ul>
+        <ul>
+        {breweries.map((brewery) => (
+          <li key={brewery.brewery_id}>Brasserie : {brewery.name} - Id : {brewery.brewery_id}</li>))}
+        </ul>
       </Collapse>
       <Collapse title="ADD A BREWERY">
       <form onSubmit={handleAddBrewery}>
@@ -293,81 +292,81 @@ const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
       />
       <button onClick={handleSearchBreweryToUpdate}>Find</button>
 
-  {breweryToEdit && updatedBreweryData && (
-    <div>
-      <h3>Update : {breweryToEdit.name}</h3>
-      <input 
-        type="text" 
-        name="name" 
-        value={updatedBreweryData.name || ""} 
-        onChange={handleInputChange} 
-        placeholder="Brewery Name" 
-      />
-      <input 
-        type="text" 
-        name="country" 
-        value={updatedBreweryData.country || ""}  
-        onChange={handleInputChange} 
-        placeholder="Country"
-      />
-      <input 
-        type="text" 
-        name="created_at" 
-        value={updatedBreweryData.created_at || ""} 
-        onChange={handleInputChange} 
-        placeholder="Created at"
-      />
-      <input 
-        type="text" 
-        name="logo" 
-        value={updatedBreweryData.logo || ""} 
-        onChange={handleInputChange} 
-        placeholder="Logo"
-      />
-      <button onClick={handleUpdateBrewery}>Update</button>
-    </div>
-  )}
+      {breweryToEdit && updatedBreweryData && (
+        <div>
+          <h3>Update : {breweryToEdit.name}</h3>
+          <input 
+          type="text" 
+          name="name" 
+          value={updatedBreweryData.name || ""} 
+          onChange={handleInputChange} 
+          placeholder="Brewery Name" 
+          />
+          <input 
+          type="text" 
+          name="country" 
+          value={updatedBreweryData.country || ""}  
+          onChange={handleInputChange} 
+          placeholder="Country"
+          />
+          <input 
+          type="text" 
+          name="created_at" 
+          value={updatedBreweryData.created_at || ""} 
+          onChange={handleInputChange} 
+          placeholder="Created at"
+          />
+          <input 
+          type="text" 
+          name="logo" 
+          value={updatedBreweryData.logo || ""} 
+          onChange={handleInputChange} 
+          placeholder="Logo"
+          />
+          <button onClick={handleUpdateBrewery}>Update</button>
+        </div>
+      )}
 
-  {message && <p style={{ color: "green" }}>{message}</p>}
+      {message && <p style={{ color: "green" }}>{message}</p>}
       </Collapse>
       <Collapse title="DELETE A BREWERY">
-      <input
-      type="number"
-      placeholder="brewery ID"
-      value={breweryIdToSearch}
-      onChange={(e) => setBreweryIdToSearch(Number(e.target.value))}
-      />
-      <button onClick={handleSearchBreweryById}>
-      Find
-      </button>
-      {displayBrewery && <p>Brewery find : {displayBrewery.name}</p>}
-      <button onClick={() => handleDeleteBrewery(Number(breweryIdToSearch))}>
-      🗑️ delete !
-      </button>
-      {message && <p style={{ color: "green" }}>{message}</p>}
+        <input
+        type="number"
+        placeholder="brewery ID"
+        value={breweryIdToSearch}
+        onChange={(e) => setBreweryIdToSearch(Number(e.target.value))}
+        />
+        <button onClick={handleSearchBreweryById}>
+        Find
+        </button>
+        {displayBrewery && <p>Brewery find : {displayBrewery.name}</p>}
+  {displayBrewery && (
+    <button onClick={() => handleDeleteBrewery(Number(breweryIdToSearch))}>
+      🗑️ Delete !
+    </button>
+  )}
+  {message && <p style={{ color: "green" }}>{message}</p>}
       </Collapse>
       </div>
       <div>
       <h3>Beer managment</h3>
       <Collapse title="SEE ALL BEERS">
-      <ul>
-      {beers.map((beer) => (
-      <li key={beer.beer_id}>{beer.beer_name} - {beer.beer_id}</li>
-      ))}
-    </ul>
+        <ul>
+        {beers.map((beer) => (
+          <li key={beer.beer_id}>Bière : {beer.beer_name} - Id : {beer.beer_id}</li>
+          ))} 
+        </ul>
       </Collapse>
-
       <Collapse title="ADD A BEER">
-      <form onSubmit={handleAddBeer}>
-        <input type="text" name="name" placeholder="Beer name" />
-        <input type="text" name="description" placeholder="Description" />
-        <input type="number" name="abv" placeholder="ABV" />
-        <input type="number" name="brewery_id" placeholder="Brewery ID" />
-        {/* <input type="text" name="created_at" placeholder="Date de création" /> */}
-        <input type="text" name="logo" placeholder="Logo" />
-        <input type="number" name="category_id" placeholder="Category ID" />
-        <button type="submit">Add</button>
-      </form>
+        <form onSubmit={handleAddBeer}>
+          <input type="text" name="name" placeholder="Beer name" />
+          <input type="text" name="description" placeholder="Description" />
+          <input type="number" name="abv" placeholder="ABV" />
+          <input type="number" name="brewery_id" placeholder="Brewery ID" />
+          <input type="text" name="logo" placeholder="Logo" />
+          <input type="number" name="category_id" placeholder="Category ID" />
+          <button type="submit">Add</button>
+        </form>
       </Collapse>
       <Collapse title="UPDATE A BEER">
       <input
@@ -430,32 +429,24 @@ const [beerIdToUpdate, setBeerIdToUpdate] = useState<number | "">("");
         </div>
       )}
       </Collapse>
-      <Collapse
-      title="DELETE A BEER">
-    <input
-      type="number"
-      placeholder="beer ID"
-      value={beerIdToSearch}
-      onChange={(e) => setBeerIdToSearch(Number(e.target.value))}
-      />
-    <button onClick={handleSearchBeerById}>
-    Find !
-    </button>
-    {displayBeer && displayBeer.beer ? (
-  <p>Beer find : {displayBeer.beer.name}</p>
-) : (
-  <p>No beer finded.</p>
-)}
-    <button onClick={() => handleDeleteBeer(Number(beerIdToSearch))}>
-    🗑️ Delete !
-    </button>
-    {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
+      <Collapse title="DELETE A BEER">
+        <input
+        type="number"
+        placeholder="beer ID"
+        value={beerIdToSearch}
+        onChange={(e) => setBeerIdToSearch(Number(e.target.value))}
+        />
+        <button onClick={handleSearchBeerById}>
+        Find !
+        </button>
+        {displayBeer && displayBeer.beer && <p>Beer find : {displayBeer.beer.name}</p>} 
+        {displayBeer && displayBeer.beer && (
+          <button onClick={() => handleDeleteBeer(Number(beerIdToSearch))}>
+            🗑️ Delete !
+          </button>
+        )}
+        {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
       </Collapse>
-
-
-
-
-
       </div>
     </div>
   );

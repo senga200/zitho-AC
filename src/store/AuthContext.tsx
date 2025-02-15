@@ -12,8 +12,8 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const ADMIN_EMAIL = "test";
-const ADMIN_PASSWORD = "test";
+const ADMIN_EMAIL = "test@admin.com";
+const ADMIN_PASSWORD = "admin";
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
