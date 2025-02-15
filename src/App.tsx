@@ -14,6 +14,7 @@ function AdminLink() {
 
   return location.pathname !== "/admin" ? (
     <div className='admin-container'>
+
       <Link to="/admin" className='link-style'>Admin Area</Link>
     </div>
   ) : null;

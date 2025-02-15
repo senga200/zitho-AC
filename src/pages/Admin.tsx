@@ -94,15 +94,15 @@ const { isAuthenticated, login, logout } = authContext;
   };
 
   const handleDeleteBrewery = async (id: number) => {
-    const confirmDelete = window.confirm(`Êtes-vous sûr de vouloir supprimer la brasserie ID ${id} ?`);
+    const confirmDelete = window.confirm(`Are you sure you want to delete this brewery  ${id} ?`);
     
     if (confirmDelete) {
       await deleteBrewery(id);
-      setMessage("Brasserie supprimée !");
+      setMessage("brewery deleted !");
       setDisplayBrewery(null);
       fetchAllBreweries();
     } else {
-      setMessage("Suppression annulée.");
+      setMessage("deleting canceled.");
     }
   };
 
@@ -117,7 +117,7 @@ const { isAuthenticated, login, logout } = authContext;
       setMessage("");
     } else {
       setBreweryToEdit(null);
-      setMessage("Aucune brasserie trouvée avec cet ID.");
+      setMessage("No brewery found.");
     }
   };
 
@@ -134,7 +134,7 @@ const { isAuthenticated, login, logout } = authContext;
     if (!breweryToEdit || !updatedBreweryData) return;
   
     await updateBrewery(breweryToEdit.brewery_id, updatedBreweryData);
-    setMessage("Brasserie mise à jour avec succès !");
+    setMessage("Brewery updated successfully !");
     setBreweryToEdit(null);
     fetchAllBreweries();
   };
