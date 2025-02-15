@@ -76,15 +76,9 @@ Le swagger est disponible pour tester les requêtes : https://zythologueapi-ac.o
 
 ## 🎨 Aperçu
 
-![à mettre](image.png)
+![page Home](image.png)
 
-## 🛠️ Améliorations futures
 
-Terminer l'interface administrateur.
-
-Améliorer l'UX/UI de l'application.
-
-Meilleure gestion des erreurs et feedback utilisateur.
 
 
 
