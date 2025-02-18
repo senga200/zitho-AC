@@ -83,7 +83,7 @@ function TagFilterBrewery({ breweries }: TagFilterBreweryProps) {
   ) : filteredBreweries.length > 0 ? (
     filteredBreweries.map((brewery) => (
       <div key={brewery.brewery_id} className="beer-item">
-        <Link to={`/beerDetails/${brewery.brewery_id}`}>
+        <Link to={`/breweryDetails/${brewery.brewery_id}`}>
           <h3>{brewery.name}</h3>
           {/* <p>{beer.description}</p>
           <p>
