@@ -19,7 +19,10 @@ function Admin() {
   const [updatedBreweryData, setUpdatedBreweryData] = useState<Brewery | null>(null);
   const [breweryIdToSearch, setBreweryIdToSearch] = useState<number | "">("");
   const [displayBrewery, setDisplayBrewery] = useState<{ id?: number; name?: string; country?: string } | null>(null);
+  const [messageDelete, setMessageDelete] = useState<string>("");
+  const [messageUpdate, setMessageUpdate] = useState<string>("");
   const [message, setMessage] = useState<string>("");
+
   // Removed duplicate useEffect for fetchAllBreweries
 ///////////HOOKS BIERES /////////////////////////////
   const [beers, setBeers] = useState<Beer[]>([]);
@@ -28,6 +31,8 @@ function Admin() {
   const [updatedBeerData, setUpdatedBeerData] = useState<Beer | null>(null);
   const [beerIdToSearch, setBeerIdToSearch] = useState<number | "">("");
   const [displayBeer, setDisplayBeer] = useState<{ beer?: Beer } | null>(null);
+  const [messageBeerDelete, setMessageBeerDelete] = useState<string>("");
+  const [messageBeerUpdate, setMessageBeerUpdate] = useState<string>("");
   const [messageBeer, setMessageBeer] = useState<string>("");
 
   useEffect(() => {
@@ -100,11 +105,11 @@ function Admin() {
     
     if (confirmDelete) {
       await deleteBrewery(id);
-      setMessage("brewery deleted !");
+      setMessageDelete("brewery deleted !");
       setDisplayBrewery(null);
       fetchAllBreweries();
     } else {
-      setMessage("deleting canceled.");
+      setMessageDelete("deleting canceled.");
     }
   };
 
@@ -137,7 +142,7 @@ function Admin() {
     
     // On copie les données actuelles du brewery dans un nouvel objet pour ne pas modifier le original
     await updateBrewery(breweryToEdit.brewery_id, updatedBreweryData);
-    setMessage("Brewery updated successfully !");
+    setMessageUpdate("Brewery updated successfully !");
     setBreweryToEdit(null);
     fetchAllBreweries();
   };
@@ -186,7 +191,7 @@ function Admin() {
     console.log("2. Données envoyées à l'API:", JSON.stringify(newBeer));
 
   
-    setMessage("Berr added successfully.");
+    setMessageBeer("Berr added successfully.");
     fetchAllBeers (); // rfesh la liste après ajout
   };
 
@@ -195,11 +200,11 @@ function Admin() {
     
     if (confirmDelete) {
       await deleteBeer(id);
-      setMessageBeer("Beer deleted !");
+      setMessageBeerDelete("Beer deleted !");
       setDisplayBeer(null);
       fetchAllBeers();
     } else {
-      setMessageBeer("deleting canceled.");
+      setMessageBeerDelete("deleting canceled.");
     }
   };
 
@@ -229,7 +234,7 @@ function Admin() {
   const handleUpdateBeer = async () => {
     if (!beerToEdit || !updatedBeerData) return;
     await updateBeer(beerToEdit.beer_id, updatedBeerData);
-    setMessageBeer("Beer updated successfully!");
+    setMessageBeerUpdate("Beer updated successfully!");
     setBeerToEdit(null);
     fetchAllBeers();
   };
@@ -281,6 +286,7 @@ function Admin() {
         <input type="text" name="logo" placeholder="Logo" />
         <button type="submit">Add</button>
       </form>
+      {message && <p style={{ color: "green" }}>{message}</p>}
       </Collapse>
       <Collapse title="UPDATE A BREWERY">
       <input 
@@ -327,7 +333,7 @@ function Admin() {
         </div>
       )}
 
-      {message && <p style={{ color: "green" }}>{message}</p>}
+      {messageUpdate && <p style={{ color: "green" }}>{messageUpdate}</p>}
       </Collapse>
       <Collapse title="DELETE A BREWERY">
         <input
@@ -345,7 +351,7 @@ function Admin() {
       🗑️ Delete !
     </button>
   )}
-  {message && <p style={{ color: "green" }}>{message}</p>}
+  {messageDelete && <p style={{ color: "green" }}>{messageDelete}</p>}
       </Collapse>
       </div>
       <div>
@@ -367,6 +373,7 @@ function Admin() {
           <input type="number" name="category_id" placeholder="Category ID" />
           <button type="submit">Add</button>
         </form>
+        {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
       </Collapse>
       <Collapse title="UPDATE A BEER">
       <input
@@ -425,7 +432,7 @@ function Admin() {
             placeholder="Category ID"
           />
           <button onClick={handleUpdateBeer}>Update</button>
-          {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
+          {messageBeerUpdate && <p style={{ color: "green" }}>{messageBeerUpdate}</p>}
         </div>
       )}
       </Collapse>
@@ -445,7 +452,7 @@ function Admin() {
             🗑️ Delete !
           </button>
         )}
-        {messageBeer && <p style={{ color: "green" }}>{messageBeer}</p>}
+        {messageBeerDelete && <p style={{ color: "green" }}>{messageBeerDelete}</p>}
       </Collapse>
       </div>
     </div>
