@@ -7,11 +7,12 @@ interface Filters {
   brewery_name: string;
   abv: string;
   category_name: string;
+  country: string;
 }
 
 interface FilterContextType {
   filters: Filters;
-  updateFilters: (filterName: string, value: string) => void;
+  updateFilters: (filterName: keyof Filters, value: string) => void;
 }
 
 const FilterContext = createContext<FilterContextType | undefined>(undefined);
@@ -27,10 +28,11 @@ const FilterContextProvider = (props: FilterContextProviderProps) => {
     brewery_name: "",
     abv: "",
     category_name: "",
+    country: "",
   });
 
   // MAJ filtres
-  const updateFilters = (filterName: string, value: string) => {
+  const updateFilters = (filterName: keyof Filters, value: string) => {
     setFilters((prevFilters) => ({
       ...prevFilters,
       [filterName]: value,
