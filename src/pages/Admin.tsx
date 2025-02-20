@@ -77,10 +77,10 @@ function Admin() {
     const response = await fetchBreweryById(Number(breweryIdToSearch));
     if (response?.brewery) {
       setDisplayBrewery(response.brewery);
-      setMessage("");
+      setMessageDelete("");
     } else {
       setDisplayBrewery(null);
-      setMessage("no brewery with this id.");
+      setMessageDelete("no brewery with this id.");
     }
   };
 
@@ -121,10 +121,10 @@ function Admin() {
     if (response?.brewery) {
       setBreweryToEdit(response.brewery);
       setUpdatedBreweryData(response.brewery); // Préremplit le formulaire
-      setMessage("");
+      setMessageUpdate("");
     } else {
       setBreweryToEdit(null);
-      setMessage("No brewery found.");
+      setMessageUpdate("No brewery found.");
     }
   };
 
@@ -162,11 +162,11 @@ function Admin() {
     const response = await fetchBeersById(Number(beerIdToSearch));
     if (response?.beer) {
       setDisplayBeer({ beer: response.beer });
-      setMessageBeer("");
+      setMessageBeerDelete("");
       console.log("bière en question", response);
     } else {
       setDisplayBeer(null);
-      setMessageBeer("no beer found with this id.");
+      setMessageBeerDelete("no beer found with this id.");
     }
   };
 
@@ -217,10 +217,10 @@ function Admin() {
     if (response?.beer) {
       setBeerToEdit(response.beer);
       setUpdatedBeerData(response.beer);
-      setMessageBeer("");
+      setMessageBeerUpdate("");
     } else {
       setBeerToEdit(null);
-      setMessageBeer("no beer found.");
+      setMessageBeerUpdate("no beer found.");
     }
   };
   const handleInputChangeBeer = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -432,9 +432,9 @@ function Admin() {
             placeholder="Category ID"
           />
           <button onClick={handleUpdateBeer}>Update</button>
-          {messageBeerUpdate && <p style={{ color: "green" }}>{messageBeerUpdate}</p>}
         </div>
       )}
+      {messageBeerUpdate && <p style={{ color: "green" }}>{messageBeerUpdate}</p>}
       </Collapse>
       <Collapse title="DELETE A BEER">
         <input
