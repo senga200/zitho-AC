@@ -273,10 +273,24 @@ function Admin() {
       <div>
       <h3>Breweries Managment</h3>
       <Collapse title="SEE ALL BREWERIES">
-        <ul>
-        {breweries.map((brewery) => (
-          <li key={brewery.brewery_id}>Brasserie : {brewery.name} - Id : {brewery.brewery_id}</li>))}
-        </ul>
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Brewery Name</th>
+              <th>Country</th>
+            </tr>
+          </thead>
+          <tbody>
+          {breweries.map((brewery) => (
+            <tr key={brewery.brewery_id}>
+              <td>{brewery.brewery_id}</td>
+              <td>{brewery.name}</td>
+              <td>{brewery.country}</td>
+            </tr>
+          ))}
+          </tbody>
+          </table>
       </Collapse>
       <Collapse title="ADD A BREWERY">
       <form onSubmit={handleAddBrewery}>
@@ -300,7 +314,7 @@ function Admin() {
 
       {breweryToEdit && updatedBreweryData && (
         <div>
-          <h3>Update : {breweryToEdit.name}</h3>
+          <h4>Update : {breweryToEdit.name}</h4>
           <input 
           type="text" 
           name="name" 
@@ -345,7 +359,7 @@ function Admin() {
         <button onClick={handleSearchBreweryById}>
         Find
         </button>
-        {displayBrewery && <p>Brewery find : {displayBrewery.name}</p>}
+        {displayBrewery && <h4>Brewery find : {displayBrewery.name}</h4>}
   {displayBrewery && (
     <button onClick={() => handleDeleteBrewery(Number(breweryIdToSearch))}>
       🗑️ Delete !
@@ -357,11 +371,24 @@ function Admin() {
       <div>
       <h3>Beer managment</h3>
       <Collapse title="SEE ALL BEERS">
-        <ul>
-        {beers.map((beer) => (
-          <li key={beer.beer_id}>Bière : {beer.beer_name} - Id : {beer.beer_id}</li>
-          ))} 
-        </ul>
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Beer Name</th>
+              <th>Brewery</th>
+            </tr>
+          </thead>
+        <tbody>
+          {beers.map((beer) => (
+            <tr key={beer.beer_id}>
+              <td>{beer.beer_id}</td>
+              <td>{beer.beer_name}</td>
+              <td>{beer.brewery_name}</td>
+            </tr>
+          ))}
+        </tbody>
+        </table>
       </Collapse>
       <Collapse title="ADD A BEER">
         <form onSubmit={handleAddBeer}>
@@ -388,7 +415,7 @@ function Admin() {
       </button>
       {beerToEdit && updatedBeerData && (
         <div>
-          <h3>Update : {beerToEdit.name}</h3>
+          <h4>Update : {beerToEdit.name}</h4>
           <input
             type="text"
             name="name"
@@ -446,7 +473,7 @@ function Admin() {
         <button onClick={handleSearchBeerById}>
         Find !
         </button>
-        {displayBeer && displayBeer.beer && <p>Beer find : {displayBeer.beer.name}</p>} 
+        {displayBeer && displayBeer.beer && <h4>Beer find : {displayBeer.beer.name}</h4>} 
         {displayBeer && displayBeer.beer && (
           <button onClick={() => handleDeleteBeer(Number(beerIdToSearch))}>
             🗑️ Delete !
