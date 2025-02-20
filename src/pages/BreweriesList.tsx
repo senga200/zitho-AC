@@ -20,7 +20,7 @@ console.log("Nos brasseries", breweries);
     <div className='list-container'>
       <h2 className='h2-list'>Our Breweries</h2>
       <SearchBrewery breweries={breweries} />
-      <TagFilterBrewery breweries={breweries} breweryTags={[]} />
+      <TagFilterBrewery breweries={breweries} />
      { breweries.length === 0 ? (
        <p>No brewery found.</p>
      ) : (

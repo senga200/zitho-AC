@@ -1,6 +1,6 @@
 
-
-import { useState, useEffect } from 'react';
+import { useContext, useMemo} from 'react';
+import { FilterContext } from "../store/FilterContext";
 import { Brewery } from '../types/Brewery';
 import Collapse from './Collapse';
 import { Link } from 'react-router-dom';
@@ -8,107 +8,103 @@ import './../styles/TagStyle.css';
 
 interface TagFilterBreweryProps {
   breweries: Brewery[];
-  breweryTags: string[];
+  //breweryFilter: string;
 }
 
 function TagFilterBrewery({ breweries }: TagFilterBreweryProps) {
-  const [selectedCountry, setSelectedCountry] = useState<string[]>([]); 
- 
-  const [filteredBreweries, setFilteredBreweries] = useState<Brewery[]>([]); 
 
-  const countryTags = Array.from(new Set(breweries.map((brewery) => (brewery.country ?? '').toString())));
+  //MISE EN PLACE DU CONTEXT
+  const filterCtx = useContext(FilterContext);
+  if (!filterCtx) {
+    throw new Error("FilterContext must be used within a FilterContextProvider");
+  }
 
+  const { filters, updateFilters } = filterCtx;
 
+  // LES TAGS - useMemo pour alcoholTags car est statique, ne change pas et du coup n'a pas besoin d'être recalculé à chaque render
+  const countryTags = Array.from(new Set(breweries.map((brewery) => brewery.country ?? '')));
+  
 
-  useEffect(() => {
-    let filtered = breweries; 
-    // pas de tag : pas de resultats affichés
-    if (selectedCountry.length === 0) {
-      setFilteredBreweries([]);
-      return;
+  // // Filtrer les bières en fonction des filtres du contexte. Utilisation de useMemo pour éviter de recalculer à chaque render FilteredBeers. le tableau est recaclulé uniquement si les dépendances changent -beers-filter-alcoholTags
+  const filteredBreweries = useMemo(() => {
+    // Vérifie si aucun filtre n'est sélectionné
+    const noFiltersActive =
+      !filters.country;
+  
+    if (noFiltersActive) {
+      // Retourne un tableau vide si aucun filtre n'est actif
+      return [];
     }
-
-
-    // Filtre pays
-    if (selectedCountry.length > 0) {
-      filtered = filtered.filter((brewery) =>
-        selectedCountry.includes(brewery.country.toString())
+  
+    let filtered = breweries;
+  
+    // Filtrage par pays
+    if (filters.country) {
+      const selectedCountries = filters.country.split(",");
+      filtered = filtered.filter((brewery: Brewery) =>
+        selectedCountries.includes(brewery.country ?? '')
       );
     }
-
-
-    setFilteredBreweries(filtered);
-  }, [selectedCountry, breweries]); 
+    return filtered;
+  }, [breweries, filters]);
+  
 
   const handleCountryTagClick = (country: string): void => {
-    setSelectedCountry((prevCategories) =>
-      prevCategories.includes(country)
-       ? prevCategories.filter((c) => c!== country)
-        : [...prevCategories, country]
-    );
-  };
-  const handleResetClick = () => {
-    setSelectedCountry([]);
-    
-    setFilteredBreweries(breweries);
+    const selectedCountries = filters.country
+     ? filters.country.split(",")
+      : [];
+    const updatedCountries = selectedCountries.includes(country)
+      ? selectedCountries.filter((b) => b !== country)
+      : [...selectedCountries, country];
+    updateFilters("country", updatedCountries.join(","));
   };
 
+
+  const handleResetClick = () => {
+    updateFilters("country", "");
+  };
 
   return (
     <div>
       <Collapse title="Filter by country">
-      <div className="tag-container">
-        {countryTags.map((tag, index) => (
-          <button
-            key={index}
-            onClick={() => handleCountryTagClick(tag.toString())}
-            style={{
-              backgroundColor: selectedCountry.includes(tag)
-                ? '#ffae00'
-                : 'white',
-              color: selectedCountry.includes(tag) ? 'white' : 'black',
-              cursor: 'pointer',
-            }}
-          >
-            {tag}
-          </button>
-        ))}
-      </div>
+        <div className="tag-container">
+          {countryTags.map((country, index) => (
+            <button
+              key={index}
+              onClick={() => handleCountryTagClick(country)}
+              style={{
+                backgroundColor: filters.brewery_name?.includes(country)
+                  ? '#ffae00'
+                  : 'white',
+                color: filters.brewery_name?.includes(country) ? 'white' : 'black',
+              }}
+            >
+              {country}
+            </button>
+          ))}
+        </div>
       </Collapse>
+
+
       <div className="beer-list">
-  {selectedCountry.length === 0  ? (
-    // Aucun tag sélectionné : si aucune bière filtrée, ne rien afficher ici ?
-    <p style={{ display: 'none' }}>Sélectionnez des tags pour afficher des bières.</p>
-  
-  ) : filteredBreweries.length > 0 ? (
-    filteredBreweries.map((brewery) => (
-      <div key={brewery.brewery_id} className="beer-item">
-        <Link to={`/breweryDetails/${brewery.brewery_id}`}>
-          <h3>{brewery.name}</h3>
-          {/* <p>{beer.description}</p>
-          <p>
-            <strong>Brasserie :</strong> {beer.brewery_name}
-          </p>
-          <p>
-            <strong>ABV :</strong> {beer.abv}°
-          </p> */}
-        </Link>
+        {filteredBreweries.length === 0 ? (
+          <p></p>
+        ) : (
+          filteredBreweries.map((brewery) => (
+            <div key={brewery.brewery_id} className="beer-item">
+              <Link to={`/breweryDetails/${brewery.brewery_id}`}>
+                <h3>{brewery.name}</h3>
+              </Link>
+            </div>
+          ))
+        )}  
+        <div className="reset-button">
+          <button onClick={handleResetClick}>Reset filters</button>
+        </div>
       </div>
-    ))
-  ) : (
-    <p>No match found.</p>
-    
-  )}
-        <div className='reset-button'>
-        <button onClick={handleResetClick}>Reset filters</button>
-        {/* <button onClick={() => console.log(filteredBeers)}>Console log</button> */}
-      </div>
-
-      </div>
-  
-
     </div>
   );
 }
 
 export default TagFilterBrewery;
+
